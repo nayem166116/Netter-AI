@@ -1,0 +1,3444 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Netter | Build with your data, not your engineers</title>
+  <meta name="description" content="Netter is the AI data platform that connects, structures and activates your company's data. Any team can ship dashboards, workflows and operational apps in hours, not quarters." />
+  <link rel="icon" type="image/svg+xml" href="assets/netter-symbol.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;510;540;590;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       NETTER DESIGN TOKENS - pulled from DMI_front/app/assets/css/main.css
+       ============================================================ */
+    :root {
+      /* Surfaces */
+      --dmi-bg:               #f7f8f8;
+      --dmi-bg-muted:         #f3f4f5;
+      --dmi-panel:            #ffffff;
+      --dmi-panel-alt:        #f5f6f7;
+      --dmi-surface:          rgba(15, 16, 17, 0.025);
+      --dmi-surface-strong:   rgba(15, 16, 17, 0.045);
+      --dmi-surface-hover:    rgba(15, 16, 17, 0.06);
+
+      /* Text */
+      --dmi-text:             #0f1011;
+      --dmi-secondary:        #3f4149;
+      --dmi-tertiary:         #6b6f76;
+      --dmi-quaternary:       #9ba0a7;
+
+      /* Borders */
+      --dmi-border:           rgba(15, 16, 17, 0.09);
+      --dmi-border-subtle:    rgba(15, 16, 17, 0.06);
+      --dmi-border-med:       rgba(15, 16, 17, 0.14);
+      --dmi-grid-line:        rgba(15, 16, 17, 0.05);
+
+      /* Brand ramp */
+      --dmi-brand-950:        #050507;
+      --dmi-brand-900:        #0a0a0e;
+      --dmi-brand-800:        #12121a;
+      --dmi-brand-700:        #17171f;
+      --dmi-brand-600:        #101018;
+      --dmi-brand-500:        #1C1C23;
+      --dmi-brand-400:        #2a2a35;
+      --dmi-brand-300:        #3a3a48;
+
+      --dmi-accent:           #1C1C23;
+      --dmi-accent-hover:     #2a2a35;
+      --dmi-accent-soft:      rgba(28, 28, 35, 0.07);
+      --dmi-accent-glow:      rgba(28, 28, 35, 0.22);
+
+      --dmi-gradient-accent:        linear-gradient(180deg, var(--dmi-accent), var(--dmi-brand-600));
+      --dmi-gradient-accent-hover:  linear-gradient(180deg, var(--dmi-brand-400), var(--dmi-accent));
+
+      /* Status (used sparingly) */
+      --dmi-success:          #10b981;
+      --dmi-warning:          #f59e0b;
+      --dmi-error:            #ef4444;
+
+      /* Radius */
+      --dmi-radius-xs:        4px;
+      --dmi-radius-sm:        6px;
+      --dmi-radius-md:        8px;
+      --dmi-radius-lg:        10px;
+      --dmi-radius-xl:        12px;
+      --dmi-radius-2xl:       14px;
+      --dmi-radius-pill:      999px;
+
+      /* Shadows */
+      --dmi-shadow-soft:      0 1px 2px rgba(15, 16, 17, 0.04);
+      --dmi-shadow:           0 0 0 1px rgba(15, 16, 17, 0.04), 0 6px 18px rgba(15, 16, 17, 0.06);
+      --dmi-shadow-panel:     0 20px 48px rgba(15, 16, 17, 0.10), 0 4px 12px rgba(15, 16, 17, 0.05);
+      --dmi-shadow-primary:   0 1px 0 rgba(255, 255, 255, 0.10) inset, 0 2px 6px rgba(15, 16, 17, 0.20);
+      --dmi-shadow-modal:     0 0 0 1px rgba(15, 16, 17, 0.04), 0 32px 80px rgba(15, 16, 17, 0.18), 0 8px 20px rgba(15, 16, 17, 0.08);
+
+      /* Spacing */
+      --s1: 0.5rem; --s2: 1rem; --s3: 1.5rem; --s4: 2rem; --s5: 2.5rem;
+      --s6: 3rem;   --s8: 4rem; --s10: 5rem; --s12: 6rem; --s16: 8rem;
+
+      /* Motion */
+      --ease-out:    cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --dmi-duration-fast:   0.12s;
+      --dmi-duration-base:   0.15s;
+      --dmi-duration-slow:   0.22s;
+      --dmi-duration-slower: 0.28s;
+
+      /* Fonts */
+      --font-sans:    "Inter", -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif;
+      --font-serif:   "Instrument Serif", "Iowan Old Style", "Apple Garamond", Georgia, serif;
+      --font-mono:    "Berkeley Mono", "SF Mono", Menlo, ui-monospace, monospace;
+    }
+
+    /* ============================================================
+       RESET
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body {
+      font-family: var(--font-sans);
+      font-feature-settings: "cv11", "ss01", "ss03";
+      background: var(--dmi-bg);
+      color: var(--dmi-text);
+      font-size: 16px;
+      line-height: 1.55;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { color: inherit; text-decoration: none; }
+    ul, ol { list-style: none; }
+    button, input, textarea, select { font-family: inherit; font-size: inherit; color: inherit; }
+    img, svg { display: block; max-width: 100%; }
+    ::selection { background: var(--dmi-accent); color: #fff; }
+
+    /* ============================================================
+       LAYOUT
+       ============================================================ */
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 clamp(1.25rem, 4vw, 2.5rem);
+    }
+    .section { padding: clamp(4.5rem, 8vw, 7.5rem) 0; }
+
+    /* ============================================================
+       BACKGROUND GRID (Hessian style - very faint)
+       ============================================================ */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(to right,  var(--dmi-grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--dmi-grid-line) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image:
+        radial-gradient(ellipse 90% 60% at 50% 35%, #000 30%, transparent 80%);
+      -webkit-mask-image:
+        radial-gradient(ellipse 90% 60% at 50% 35%, #000 30%, transparent 80%);
+    }
+
+    /* ============================================================
+       NAV - pill, floating, backdrop blur
+       ============================================================ */
+    .nav-wrap {
+      position: fixed; top: 1rem; left: 0; right: 0; z-index: 50;
+      display: flex; justify-content: center; pointer-events: none;
+    }
+    .nav {
+      display: flex; align-items: center; gap: 0.5rem;
+      width: min(calc(100% - 2rem), 1140px);
+      /* Right padding matches top/bottom so the gap around the CTA pill
+         reads as visually equal on all three edges. */
+      padding: 0.5rem 0.55rem 0.5rem 1.65rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-pill);
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: saturate(140%) blur(14px);
+      -webkit-backdrop-filter: saturate(140%) blur(14px);
+      box-shadow: var(--dmi-shadow-soft);
+      pointer-events: auto;
+      transition: box-shadow var(--dmi-duration-slow) var(--ease-out),
+                  border-color var(--dmi-duration-slow) var(--ease-out),
+                  transform var(--dmi-duration-slow) var(--ease-out);
+    }
+    .nav.scrolled {
+      box-shadow: var(--dmi-shadow);
+      border-color: var(--dmi-border-med);
+    }
+    .nav-brand {
+      display: flex; align-items: center;
+      color: var(--dmi-text);
+      padding: 0.25rem 0;
+    }
+    .nav-logo {
+      height: 17px; width: auto;
+      color: var(--dmi-accent);
+      display: block;
+    }
+    .nav-links {
+      display: flex; gap: 0.15rem; margin-left: 1.4rem;
+    }
+    .nav-link {
+      padding: 0.45rem 0.85rem;
+      font-size: 0.88rem;
+      color: var(--dmi-secondary);
+      border-radius: var(--dmi-radius-md);
+      transition: color var(--dmi-duration-base) var(--ease-out),
+                  background var(--dmi-duration-base) var(--ease-out);
+    }
+    .nav-link:hover { color: var(--dmi-text); background: var(--dmi-surface); }
+    .nav-spacer { flex: 1; }
+    .nav-cta {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex; align-items: center;
+      height: 2.15rem; padding: 0 1.05rem;
+      border: none;
+      border-radius: var(--dmi-radius-pill);
+      background: var(--dmi-gradient-accent);
+      color: #fff;
+      font-size: 0.86rem;
+      font-weight: 540;
+      letter-spacing: -0.005em;
+      cursor: pointer;
+      box-shadow: var(--dmi-shadow-primary);
+      isolation: isolate;
+    }
+    /* Hover dimming via a pseudo-element overlay - leaves the button itself
+       (and its drop shadow) completely untouched, so nothing re-composites
+       during the transition: no shadow flicker, no text re-aliasing. */
+    .nav-cta::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: rgba(255, 255, 255, 0);
+      transition: background var(--dmi-duration-base) var(--ease-out);
+      pointer-events: none;
+    }
+    .nav-cta:hover::after { background: rgba(255, 255, 255, 0.10); }
+    .nav-cta > * { position: relative; z-index: 1; }
+
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+      .nav { padding-left: 0.85rem; }
+    }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero {
+      position: relative;
+      padding: clamp(9.2rem, 20.3vh, 13.2rem) 0 clamp(2.5rem, 4vw, 3.5rem);
+      text-align: center;
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: 920px; margin: 0 auto;
+    }
+
+    /* YC backed pill */
+    .yc-pill {
+      display: inline-flex; align-items: center; gap: 0.4em;
+      padding: 0.4rem 0.95rem 0.4rem 1.02rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-pill);
+      background: var(--dmi-panel);
+      color: var(--dmi-secondary);
+      font-size: 0.81rem;
+      font-weight: 500;
+      letter-spacing: -0.005em;
+      box-shadow: var(--dmi-shadow-soft);
+      opacity: 0; transform: translateY(8px);
+      animation: rise 0.7s var(--ease-spring) 0.05s forwards;
+    }
+    .yc-brand {
+      display: inline-flex; align-items: center; gap: 0.26em;
+      color: var(--dmi-text);
+      font-weight: 580;
+    }
+    .yc-mark {
+      width: 16px; height: 16px;
+      border-radius: 2px;
+      display: block;
+    }
+
+    .hero-heading {
+      margin: 1.5rem auto 0;
+      font-size: clamp(2.3rem, 5.2vw, 4rem);
+      font-weight: 510;
+      line-height: 1.04;
+      letter-spacing: -0.042em;
+      color: var(--dmi-text);
+      opacity: 0; transform: translateY(14px);
+      animation: rise 0.85s var(--ease-spring) 0.18s forwards;
+    }
+    .hero-heading em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      font-size: 1.04em;
+    }
+
+    .hero-sub {
+      margin: 1.5rem auto 0;
+      max-width: 640px;
+      font-size: clamp(1rem, 1.6vw, 1.13rem);
+      line-height: 1.55;
+      color: var(--dmi-secondary);
+      opacity: 0; transform: translateY(14px);
+      animation: rise 0.85s var(--ease-spring) 0.32s forwards;
+    }
+
+    /* Composer (chat input) */
+    .composer-wrap {
+      position: relative;
+      width: min(100%, 760px);
+      margin: 2.6rem auto 0;
+      opacity: 0; transform: translateY(14px);
+      animation: rise 0.95s var(--ease-spring) 0.46s forwards;
+    }
+    .composer {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--dmi-border);
+      border-radius: 1.25rem;
+      background: var(--dmi-panel);
+      box-shadow:
+        0 1px 2px rgba(15, 16, 17, 0.03),
+        0 12px 32px rgba(15, 16, 17, 0.06);
+      transition: border-color var(--dmi-duration-slow) var(--ease-out),
+                  box-shadow  var(--dmi-duration-slow) var(--ease-out);
+    }
+    .composer::before {
+      content: "";
+      position: absolute; inset: 0 0 auto;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--dmi-accent), transparent);
+      opacity: 0;
+      transition: opacity var(--dmi-duration-slow) var(--ease-out);
+      pointer-events: none;
+    }
+    .composer:focus-within {
+      border-color: var(--dmi-accent);
+      box-shadow:
+        0 2px 4px rgba(15, 16, 17, 0.04),
+        0 18px 40px rgba(15, 16, 17, 0.10);
+    }
+    .composer:focus-within::before { opacity: 0.85; }
+
+    .composer-input-wrap {
+      padding: 1.4rem 1.45rem 0.5rem;
+    }
+    .composer-input {
+      display: block;
+      width: 100%;
+      min-height: 3.4rem;
+      max-height: 14rem;
+      padding: 0; margin: 0;
+      border: none;
+      background: transparent;
+      color: var(--dmi-text);
+      caret-color: var(--dmi-text);
+      font-family: inherit;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      text-align: left;
+      resize: none;
+      outline: none;
+      overflow-y: auto;
+      vertical-align: top;
+    }
+    .composer-input::placeholder {
+      color: var(--dmi-tertiary);
+      opacity: 1;
+    }
+
+    .composer-toolbar {
+      display: flex; align-items: center; justify-content: flex-end;
+      padding: 0 0.85rem 0.85rem;
+    }
+    .submit {
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      width: 2.5rem; height: 2.5rem;
+      border: none;
+      border-radius: 0.7rem;
+      background: var(--dmi-gradient-accent);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: var(--dmi-shadow-primary);
+      transition: background var(--dmi-duration-base) var(--ease-out),
+                  transform  var(--dmi-duration-base) var(--ease-out);
+    }
+    .submit:hover { background: var(--dmi-gradient-accent-hover); transform: translateY(-1px); }
+    .submit:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+    .submit svg { width: 18px; height: 18px; }
+
+    .hero-foot {
+      margin: 1.5rem auto 0;
+      font-size: 0.82rem;
+      color: var(--dmi-tertiary);
+      opacity: 0; animation: rise 1s var(--ease-spring) 0.6s forwards;
+    }
+
+
+    @keyframes rise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       DASHBOARD PREVIEW (Hessian-style - perspective screenshot)
+       ============================================================ */
+    .preview {
+      position: relative;
+      /* Top is intentionally tight - the hero-foot caption reads as the
+         lead-in to the dashboard, so we don't want a hard section break.
+         Bottom stays generous: the dashboard's drop shadow fans ~80px and
+         we want it to fade fully inside the preview's own bg before the
+         next (differently-colored) section takes over. */
+      padding: clamp(0.5rem, 1.5vw, 1.25rem) 0 clamp(6rem, 10vw, 9rem);
+      overflow: hidden;
+    }
+    .preview-stage {
+      position: relative;
+      max-width: 1340px;
+      margin: 0 auto;
+      padding: 0 clamp(1rem, 4vw, 2.5rem);
+      perspective: 1800px;
+    }
+    .preview-frame {
+      position: relative;
+      margin: 0 auto;
+      max-width: 1240px;
+      border: 1px solid var(--dmi-border);
+      border-radius: 14px;
+      background: var(--dmi-panel);
+      box-shadow:
+        0 0 0 1px rgba(15, 16, 17, 0.03),
+        0 30px 80px rgba(15, 16, 17, 0.12),
+        0 8px 24px rgba(15, 16, 17, 0.06);
+      overflow: hidden;
+      transform-style: preserve-3d;
+      will-change: transform;
+      /* Default tilt set as a CSS variable so the parallax JS can blend in */
+      --rx: 8deg; --ry: -1.5deg;
+      transform: rotateX(var(--rx)) rotateY(var(--ry));
+      transition: transform 0.5s var(--ease-out);
+      opacity: 0;
+      animation: previewIn 1.1s var(--ease-spring) 0.2s forwards;
+    }
+    @keyframes previewIn {
+      from { opacity: 0; transform: rotateX(14deg) rotateY(-1.5deg) translateY(40px); }
+      to   { opacity: 1; transform: rotateX(8deg)  rotateY(-1.5deg) translateY(0); }
+    }
+    /* While the JS parallax is active we let it own --rx / --ry */
+    .preview-frame.is-parallaxing {
+      animation: none;
+      opacity: 1;
+      transition: transform 0.18s var(--ease-out);
+    }
+
+    /* fake browser chrome */
+    .preview-chrome {
+      display: flex; align-items: center; gap: 0.55rem;
+      padding: 0.65rem 0.9rem;
+      border-bottom: 1px solid var(--dmi-border-subtle);
+      background: var(--dmi-panel-alt);
+    }
+    .preview-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--dmi-border-med); }
+    .preview-dot:nth-child(1) { background: #ff5f57; }
+    .preview-dot:nth-child(2) { background: #febc2e; }
+    .preview-dot:nth-child(3) { background: #28c840; }
+    .preview-url {
+      flex: 1;
+      margin-left: 0.4rem;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--dmi-tertiary);
+      letter-spacing: -0.005em;
+    }
+    .preview-img {
+      display: block; width: 100%; height: auto;
+    }
+
+    /* ============================================================
+       SECTION HEADER (shared)
+       ============================================================ */
+    .sect-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dmi-tertiary);
+    }
+    .sect-eyebrow::before {
+      content: ""; width: 1.4rem; height: 1px; background: var(--dmi-border-med);
+    }
+    .sect-heading {
+      margin-top: 0.9rem;
+      max-width: 720px;
+      font-size: clamp(1.85rem, 3.4vw, 2.85rem);
+      font-weight: 510;
+      line-height: 1.05;
+      letter-spacing: -0.038em;
+      color: var(--dmi-text);
+    }
+    .sect-heading em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      font-size: 1.04em;
+    }
+    .sect-sub {
+      margin-top: 1.05rem;
+      max-width: 600px;
+      color: var(--dmi-secondary);
+      font-size: 1.02rem;
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       FLOW SECTION - sources → Netter AI → outputs
+       ============================================================ */
+    .flow-section { background: var(--dmi-panel-alt); border-top: 1px solid var(--dmi-border); }
+    .flow-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: center;
+    }
+    @media (max-width: 920px) { .flow-grid { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       PLATFORM ILLUSTRATION — transparent block on the flow-section bg:
+         5 source cards (left) → dark cube hub → 5 output cards (right)
+       Single inline SVG so it scales as one unit.
+       Animations are opacity / stroke-dashoffset only — never CSS
+       `transform`, since it would override SVG `transform="translate(...)"`
+       attributes on the card groups.
+       ============================================================ */
+    .platform-illust {
+      position: relative;
+      width: 100%;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+    .platform-illust > svg {
+      width: 100%; height: auto; display: block; overflow: visible;
+    }
+
+    /* Cards are HTML pills positioned absolutely over the SVG, so each
+       card auto-sizes to its content width (pill width follows label
+       length). Left cards are anchored by their RIGHT edge and right
+       cards by their LEFT edge — both edges align with the SVG line
+       endpoints (x=195 / x=365 → 34.82% / 66.96% of the 560-wide
+       viewBox), so line tips meet the card edge regardless of width. */
+    .pi-card {
+      position: absolute;
+      z-index: 2;
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      padding: 0.45rem 0.85rem 0.45rem 0.7rem;
+      background: var(--dmi-panel);
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-pill);
+      box-shadow: var(--dmi-shadow-soft);
+      font-size: 0.86rem;
+      font-weight: 540;
+      color: var(--dmi-text);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      opacity: 0;
+    }
+    .pi-card svg {
+      width: 18px; height: 18px;
+      flex-shrink: 0;
+      color: var(--dmi-secondary);
+      display: block;
+    }
+    .pi-card-l { right: 66.96%; animation: pi-card-l-in 0.6s var(--ease-spring) forwards; }
+    .pi-card-r { left:  66.96%; animation: pi-card-r-in 0.6s var(--ease-spring) forwards; }
+    .pi-card-1 { top: 21.1%; animation-delay: 0.10s; }
+    .pi-card-2 { top: 35.7%; animation-delay: 0.18s; }
+    .pi-card-3 { top: 50.2%; animation-delay: 0.26s; }
+    .pi-card-4 { top: 64.8%; animation-delay: 0.34s; }
+    .pi-card-5 { top: 79.3%; animation-delay: 0.42s; }
+    @keyframes pi-card-l-in {
+      from { opacity: 0; transform: translate(-12px, -50%); }
+      to   { opacity: 1; transform: translate(0,    -50%); }
+    }
+    @keyframes pi-card-r-in {
+      from { opacity: 0; transform: translate(12px, -50%); }
+      to   { opacity: 1; transform: translate(0,    -50%); }
+    }
+
+    /* Connecting lines — draw in */
+    .pi-line {
+      fill: none;
+      stroke: rgba(15, 16, 17, 0.28);
+      stroke-width: 1;
+      stroke-linecap: round;
+      stroke-dasharray: 240;
+      stroke-dashoffset: 240;
+      animation: pi-line-draw 0.9s var(--ease-spring) forwards;
+    }
+    .pi-line-1 { animation-delay: 0.55s; }
+    .pi-line-2 { animation-delay: 0.62s; }
+    .pi-line-3 { animation-delay: 0.69s; }
+    .pi-line-4 { animation-delay: 0.76s; }
+    .pi-line-5 { animation-delay: 0.83s; }
+    @keyframes pi-line-draw { to { stroke-dashoffset: 0; } }
+
+    /* Travelling data-flow pulse along selected lines */
+    .pi-pulse {
+      fill: none;
+      stroke: var(--dmi-text);
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-dasharray: 7 240;
+      stroke-dashoffset: 240;
+      opacity: 0;
+      animation: pi-pulse-flow 5s linear infinite;
+      animation-delay: 1.6s;
+    }
+    @keyframes pi-pulse-flow {
+      0%   { stroke-dashoffset: 246; opacity: 0; }
+      8%   { opacity: 0.85; }
+      45%  { stroke-dashoffset: 0;   opacity: 0.85; }
+      55%  { stroke-dashoffset: 0;   opacity: 0; }
+      100% { stroke-dashoffset: 0;   opacity: 0; }
+    }
+    .pi-pulse-out  { animation-delay: 2.2s; }
+    .pi-pulse-2    { animation-delay: 3.0s; }
+    .pi-pulse-2-out{ animation-delay: 3.6s; }
+
+    /* Cube node pulse — opacity only (stays put). */
+    .pi-node-pulse { animation: pi-node-glow 3.2s var(--ease-spring) infinite; }
+    .pi-node-pulse-2 { animation-delay: 1.0s; }
+    .pi-node-pulse-3 { animation-delay: 2.0s; }
+    @keyframes pi-node-glow {
+      0%, 100% { opacity: 0.55; }
+      50%      { opacity: 1;    }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pi-card, .pi-line, .pi-pulse, .pi-node-pulse {
+        animation: none !important;
+        opacity: 1 !important;
+        stroke-dashoffset: 0 !important;
+      }
+    }
+
+    /* ============================================================
+       BENTO GRID
+       ============================================================ */
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1.1rem;
+      margin-top: 3.5rem;
+    }
+    .bento-cell {
+      grid-column: span 3;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-2xl);
+      background: var(--dmi-panel);
+      box-shadow: var(--dmi-shadow-soft);
+      padding: 1.6rem 1.7rem 1.7rem;
+      min-height: 380px;
+      display: flex; flex-direction: column;
+      transition: transform var(--dmi-duration-slow) var(--ease-out),
+                  box-shadow var(--dmi-duration-slow) var(--ease-out),
+                  border-color var(--dmi-duration-slow) var(--ease-out);
+    }
+    .bento-cell:hover {
+      border-color: var(--dmi-border-med);
+      box-shadow: var(--dmi-shadow);
+      transform: translateY(-2px);
+    }
+    .bento-cell-wide  { grid-column: span 4; }
+    .bento-cell-small { grid-column: span 2; }
+
+    @media (max-width: 980px) {
+      .bento { grid-template-columns: repeat(2, 1fr); }
+      .bento-cell, .bento-cell-wide, .bento-cell-small { grid-column: span 2; min-height: 340px; }
+    }
+
+    .bento-title {
+      font-size: 1.08rem;
+      font-weight: 590;
+      letter-spacing: -0.018em;
+      color: var(--dmi-text);
+    }
+    .bento-desc {
+      margin-top: 0.55rem;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: var(--dmi-secondary);
+      max-width: 36ch;
+    }
+    .bento-visual {
+      margin-top: 1.4rem;
+      flex: 1;
+      position: relative;
+      min-height: 0;
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+
+    /* Bento - chat preview */
+    .bv-chat {
+      width: 100%;
+      align-self: stretch;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      padding-top: 0.4rem;
+    }
+    .bv-msg {
+      max-width: 80%;
+      padding: 0.55rem 0.8rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: 0.85rem;
+      background: var(--dmi-panel);
+      color: var(--dmi-text);
+      font-size: 0.84rem;
+      box-shadow: var(--dmi-shadow-soft);
+    }
+    .bv-msg-user {
+      align-self: flex-end;
+      background: var(--dmi-text); color: #fff; border-color: var(--dmi-text);
+    }
+    .bv-msg-thinking {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      color: var(--dmi-tertiary);
+      font-size: 0.78rem;
+      padding: 0.4rem 0.7rem;
+      align-self: flex-start;
+    }
+    .bv-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--dmi-tertiary);
+      animation: bv-dot 1.2s var(--ease-out) infinite;
+    }
+    .bv-dot:nth-child(2) { animation-delay: 0.15s; }
+    .bv-dot:nth-child(3) { animation-delay: 0.30s; }
+    @keyframes bv-dot {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-3px); opacity: 1; }
+    }
+
+    /* Bento - workflow graph */
+    .bv-graph { width: 100%; height: 200px; }
+    .bv-graph-card {
+      fill: var(--dmi-panel); stroke: rgba(15, 16, 17, 0.10); stroke-width: 1;
+    }
+    .bv-graph-card-active { fill: var(--dmi-text); stroke: var(--dmi-text); }
+    .bv-graph-text { font-family: var(--font-sans); font-size: 9px; font-weight: 540; fill: var(--dmi-secondary); }
+    .bv-graph-text-active { fill: #fff; }
+    .bv-graph-line { stroke: rgba(15, 16, 17, 0.16); stroke-width: 1.3; fill: none; stroke-dasharray: 3 4; animation: dash-flow 4s linear infinite; }
+    .bv-graph-line-active { stroke: var(--dmi-text); stroke-dasharray: none; animation: none; }
+
+    /* Bento - connectors list (clean vertical) */
+    .bv-connectors {
+      width: 100%;
+      display: flex; flex-direction: column;
+      gap: 0.4rem;
+    }
+    .bv-conn {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.5rem 0.65rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-md);
+      background: var(--dmi-panel);
+      box-shadow: var(--dmi-shadow-soft);
+    }
+    .bv-conn-mono {
+      width: 1.5rem; height: 1.5rem;
+      flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 5px;
+      background: var(--dmi-panel-alt);
+      color: var(--dmi-text);
+      font-size: 0.66rem;
+      font-weight: 590;
+      letter-spacing: -0.02em;
+    }
+    .bv-conn-name {
+      font-size: 0.84rem;
+      font-weight: 540;
+      color: var(--dmi-text);
+      letter-spacing: -0.01em;
+    }
+    .bv-conn-status {
+      margin-left: auto;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--dmi-quaternary);
+    }
+    .bv-conn-status--live {
+      background: var(--dmi-success);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+      animation: bv-live-pulse 1.6s var(--ease-out) infinite;
+    }
+    .bv-conn-more {
+      padding: 0.45rem 0.65rem;
+      font-size: 0.78rem;
+      color: var(--dmi-tertiary);
+      letter-spacing: -0.005em;
+    }
+
+    /* Bento - code snippet */
+    .bv-code {
+      width: 100%;
+      padding: 1rem 1.05rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-xl);
+      background: var(--dmi-panel-alt);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.65;
+      color: var(--dmi-secondary);
+      overflow: hidden;
+    }
+    .bv-code-key  { color: #b95184; }
+    .bv-code-fn   { color: #4a6cd1; }
+    .bv-code-str  { color: #2f7c54; }
+    .bv-code-com  { color: var(--dmi-tertiary); }
+    .bv-code-line { display: block; white-space: pre; }
+
+    /* Bento - dashboard mini */
+    .bv-dash {
+      width: 100%;
+      padding: 0.85rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-lg);
+      background: var(--dmi-panel-alt);
+    }
+    .bv-dash-row {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.4rem;
+      margin-bottom: 0.55rem;
+    }
+    .bv-stat {
+      padding: 0.5rem 0.55rem;
+      background: var(--dmi-panel);
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-md);
+    }
+    .bv-stat-label { font-size: 0.62rem; color: var(--dmi-tertiary); font-family: var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; }
+    .bv-stat-value { font-size: 0.95rem; font-weight: 590; color: var(--dmi-text); margin-top: 0.1rem; letter-spacing: -0.02em; }
+    .bv-stat-delta { font-size: 0.6rem; margin-top: 0.05rem; color: var(--dmi-success); }
+    .bv-chart {
+      height: 56px;
+      width: 100%;
+      background: var(--dmi-panel);
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-md);
+      padding: 0.4rem;
+      display: flex; align-items: flex-end; gap: 3px;
+    }
+    .bv-bar { flex: 1; background: linear-gradient(180deg, var(--dmi-text), #3a3a48); border-radius: 2px; min-height: 8%; }
+
+    /* Bento - real-time logs */
+    .bv-logs {
+      width: 100%;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-xl);
+      background: var(--dmi-panel-alt);
+      overflow: hidden;
+      font-family: var(--font-mono);
+    }
+    .bv-logs-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.45rem 0.65rem;
+      border-bottom: 1px solid var(--dmi-border-subtle);
+      font-size: 0.65rem;
+      color: var(--dmi-tertiary);
+    }
+    .bv-logs-live {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      color: var(--dmi-success-strong);
+    }
+    .bv-logs-live-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--dmi-success);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+      animation: bv-live-pulse 1.6s var(--ease-out) infinite;
+    }
+    @keyframes bv-live-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
+    }
+    .bv-logs-body { padding: 0.4rem 0.55rem; }
+    .bv-log {
+      display: grid;
+      grid-template-columns: auto auto 1fr;
+      align-items: center; gap: 0.45rem;
+      padding: 0.18rem 0.1rem;
+      font-size: 0.66rem;
+    }
+    .bv-log-t { color: var(--dmi-tertiary); letter-spacing: -0.01em; }
+    .bv-log-tag {
+      padding: 0 0.4rem;
+      height: 1.05rem;
+      display: inline-flex; align-items: center;
+      border-radius: 4px;
+      font-size: 0.55rem; letter-spacing: 0.05em; font-weight: 540;
+    }
+    .bv-log-tag--info { background: rgba(15,16,17,0.06); color: var(--dmi-secondary); }
+    .bv-log-tag--ok   { background: var(--dmi-success-soft); color: var(--dmi-success-strong); }
+    .bv-log-msg { color: var(--dmi-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bv-log-dim { color: var(--dmi-tertiary); }
+
+    /* Bento - security pattern */
+    .bv-sec {
+      width: 100%; height: 100%;
+      position: relative;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--dmi-quaternary);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+      overflow: hidden;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 60%, #000 30%, transparent 90%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 60%, #000 30%, transparent 90%);
+    }
+    .bv-sec-grid { word-break: break-all; }
+    .bv-sec-mark {
+      position: absolute;
+      left: 50%; top: 60%;
+      transform: translate(-50%, -50%);
+      width: 56px; height: 56px;
+      color: var(--dmi-text);
+    }
+
+    /* ============================================================
+       USE CASES - three detailed patterns + a compact second tier
+       ============================================================ */
+    .uc-grid-primary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.1rem;
+      margin-top: 3rem;
+    }
+    .uc-grid-secondary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.7rem;
+      margin-top: 1.4rem;
+    }
+    @media (max-width: 980px) {
+      .uc-grid-primary   { grid-template-columns: 1fr; }
+      .uc-grid-secondary { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 580px) {
+      .uc-grid-secondary { grid-template-columns: 1fr; }
+    }
+
+    /* Primary card */
+    .uc-card-primary {
+      display: flex; flex-direction: column;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-2xl);
+      background: var(--dmi-panel);
+      box-shadow: var(--dmi-shadow-soft);
+      overflow: hidden;
+      transition: transform var(--dmi-duration-slow) var(--ease-out),
+                  box-shadow var(--dmi-duration-slow) var(--ease-out),
+                  border-color var(--dmi-duration-slow) var(--ease-out);
+    }
+    .uc-card-primary:hover {
+      border-color: var(--dmi-border-med);
+      box-shadow: var(--dmi-shadow);
+      transform: translateY(-2px);
+    }
+
+    .uc-visual {
+      position: relative;
+      padding: 1rem;
+      min-height: 158px;
+      background: var(--dmi-panel-alt);
+      border-bottom: 1px solid var(--dmi-border-subtle);
+      display: flex; flex-direction: column;
+      gap: 0.45rem;
+      overflow: hidden;
+    }
+
+    /* Visual A - invoice list (cash collection) */
+    .uc-inv-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.65rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-md);
+      background: var(--dmi-panel);
+    }
+    .uc-inv-id  {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      color: var(--dmi-tertiary);
+      letter-spacing: -0.005em;
+    }
+    .uc-inv-co  {
+      font-size: 0.8rem;
+      font-weight: 540;
+      color: var(--dmi-text);
+      letter-spacing: -0.01em;
+    }
+    .uc-inv-amt {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 540;
+      color: var(--dmi-text);
+    }
+    .uc-inv-risk {
+      padding: 0.12rem 0.45rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      font-weight: 590;
+      letter-spacing: 0.06em;
+    }
+    .uc-inv-risk--high { background: rgba(239, 68, 68, 0.10); color: #b81818; }
+    .uc-inv-risk--med  { background: rgba(245, 158, 11, 0.14); color: #8a5b00; }
+    .uc-inv-risk--low  { background: rgba(16, 185, 129, 0.12); color: #047857; }
+
+    /* Visual B - signal feed (market intelligence) */
+    .uc-feed-row {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      padding: 0.5rem 0.7rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-md);
+      background: var(--dmi-panel);
+    }
+    .uc-feed-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--dmi-text);
+      margin-top: 0.42rem;
+      flex-shrink: 0;
+    }
+    .uc-feed-body { flex: 1; min-width: 0; }
+    .uc-feed-title {
+      font-size: 0.78rem;
+      font-weight: 540;
+      color: var(--dmi-text);
+      letter-spacing: -0.01em;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .uc-feed-meta {
+      margin-top: 0.1rem;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      color: var(--dmi-tertiary);
+    }
+
+    /* Visual C - system status rows (tower control) */
+    .uc-tower-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-md);
+      background: var(--dmi-panel);
+    }
+    .uc-tower-name {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--dmi-text);
+      letter-spacing: -0.005em;
+    }
+    .uc-tower-status {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 540;
+      color: var(--dmi-tertiary);
+    }
+    .uc-tower-status::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--dmi-quaternary);
+    }
+    .uc-tower-status--live { color: var(--dmi-success); }
+    .uc-tower-status--live::before {
+      background: var(--dmi-success);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+      animation: bv-live-pulse 1.6s var(--ease-out) infinite;
+    }
+    .uc-tower-status--warn { color: var(--dmi-warning); }
+    .uc-tower-status--warn::before { background: var(--dmi-warning); }
+
+    /* Tower-row variant - health score badge instead of live/stale dot */
+    .uc-tower-score {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 2.1rem;
+      padding: 0.18rem 0.5rem;
+      border-radius: var(--dmi-radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 590;
+      letter-spacing: -0.01em;
+      background: rgba(15, 16, 17, 0.05);
+      color: var(--dmi-text);
+    }
+    .uc-tower-score--good { background: rgba(16, 185, 129, 0.12); color: #047857; }
+    .uc-tower-score--med  { background: rgba(245, 158, 11, 0.14); color: #8a5b00; }
+    .uc-tower-score--warn { background: rgba(239, 68, 68, 0.10); color: #b81818; }
+
+    /* Receivables status badges (re-use uc-inv-row, separate semantic colors) */
+    .uc-inv-status {
+      padding: 0.12rem 0.5rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      font-weight: 590;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .uc-inv-status--matched { background: rgba(16, 185, 129, 0.12); color: #047857; }
+    .uc-inv-status--dunning { background: rgba(15, 16, 17, 0.06);   color: var(--dmi-secondary); }
+    .uc-inv-status--anomaly { background: rgba(245, 158, 11, 0.16); color: #8a5b00; }
+
+    /* Body */
+    .uc-body {
+      padding: 1.4rem 1.4rem 1.5rem;
+      display: flex; flex-direction: column;
+      flex: 1;
+    }
+    .uc-icon-clean {
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      width: 2.65rem; height: 2.65rem;
+      border-radius: var(--dmi-radius-lg);
+      background: var(--dmi-gradient-accent);
+      color: #fff;
+      box-shadow: var(--dmi-shadow-primary);
+      margin-bottom: 1.15rem;
+    }
+    .uc-icon-clean svg { width: 18px; height: 18px; }
+    .uc-title {
+      font-size: 1.05rem;
+      font-weight: 590;
+      letter-spacing: -0.02em;
+      color: var(--dmi-text);
+    }
+    .uc-pain {
+      margin-top: 0.4rem;
+      font-size: 0.86rem;
+      color: var(--dmi-secondary);
+      line-height: 1.5;
+    }
+    .uc-bullets {
+      margin-top: 0.95rem;
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .uc-bullets li {
+      position: relative;
+      padding-left: 1.05rem;
+      font-size: 0.84rem;
+      line-height: 1.5;
+      color: var(--dmi-secondary);
+      letter-spacing: -0.005em;
+    }
+    .uc-bullets li::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0.58em;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--dmi-text);
+    }
+    .uc-foot { margin-top: auto; padding-top: 1.1rem; }
+    .uc-tag {
+      display: inline-flex; align-items: center;
+      padding: 0.25rem 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      font-weight: 540;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--dmi-tertiary);
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-pill);
+      background: var(--dmi-bg);
+    }
+
+    /* Divider between primary and secondary tier */
+    .uc-divider {
+      margin-top: 3rem;
+      display: flex; align-items: center; gap: 0.85rem;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dmi-tertiary);
+    }
+    .uc-divider::before,
+    .uc-divider::after {
+      content: ""; flex: 1; height: 1px; background: var(--dmi-border);
+    }
+
+    /* Secondary card — body sizing aligned with the primary cards above
+       (same icon dimensions, title and description scale). The visual
+       differentiation between tiers comes from the absence of the visual
+       header and a softer icon background, not from text size. */
+    .uc-card-secondary {
+      display: flex; flex-direction: column;
+      padding: 1.4rem 1.4rem 1.5rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-2xl);
+      background: var(--dmi-panel);
+      box-shadow: var(--dmi-shadow-soft);
+      transition: transform var(--dmi-duration-slow) var(--ease-out),
+                  box-shadow var(--dmi-duration-slow) var(--ease-out),
+                  border-color var(--dmi-duration-slow) var(--ease-out);
+    }
+    .uc-card-secondary:hover {
+      border-color: var(--dmi-border-med);
+      box-shadow: var(--dmi-shadow);
+      transform: translateY(-2px);
+    }
+    .uc-icon-small {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 2.65rem; height: 2.65rem;
+      border-radius: var(--dmi-radius-lg);
+      background: var(--dmi-accent-soft);
+      color: var(--dmi-text);
+      flex-shrink: 0;
+      margin-bottom: 1.15rem;
+    }
+    .uc-icon-small svg { width: 18px; height: 18px; }
+    .uc-sec-body {
+      display: flex; flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+    }
+    .uc-title-sm {
+      font-size: 1.05rem;
+      font-weight: 590;
+      letter-spacing: -0.02em;
+      color: var(--dmi-text);
+      line-height: 1.3;
+    }
+    .uc-sec-desc {
+      font-size: 0.86rem;
+      line-height: 1.5;
+      color: var(--dmi-secondary);
+      letter-spacing: -0.003em;
+      margin: 0;
+    }
+    .uc-tag-sm {
+      margin-top: 1.1rem;
+      align-self: flex-start;
+      display: inline-flex; align-items: center;
+      padding: 0.25rem 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      font-weight: 540;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--dmi-tertiary);
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-pill);
+      background: var(--dmi-bg);
+    }
+
+    /* Industries strip - showcase covered verticals */
+    .industries-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 1.6rem;
+    }
+    .industry-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      /* Symmetric padding: top/bottom = left match so the icon circle has
+         equal breathing room on top and on its left. Right padding is
+         slightly larger to balance the text content visually. */
+      padding: 0.4rem 0.95rem 0.4rem 0.4rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: 999px;
+      background: var(--dmi-panel);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      line-height: 1;
+      letter-spacing: 0.05em;
+      color: var(--dmi-secondary);
+      text-transform: uppercase;
+    }
+    .industry-chip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 999px;
+      background: var(--dmi-accent-soft);
+      color: var(--dmi-text);
+      flex-shrink: 0;
+    }
+    .industry-chip-icon svg { width: 14px; height: 14px; display: block; }
+
+
+    /* ============================================================
+       HOW IT WORKS (steps)
+       ============================================================ */
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+    @media (max-width: 980px) { .how-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 580px) { .how-grid { grid-template-columns: 1fr; } }
+
+    .how-card {
+      position: relative;
+      padding: 1.5rem 1.4rem 1.55rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-xl);
+      background: var(--dmi-panel);
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .how-card:hover {
+      border-color: color-mix(in srgb, var(--dmi-text) 24%, var(--dmi-border));
+      transform: translateY(-1px);
+    }
+    .how-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--dmi-panel-alt);
+      border: 1px solid var(--dmi-border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dmi-text);
+      margin-bottom: 1.1rem;
+    }
+    .how-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+    .how-num {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--dmi-tertiary);
+      text-transform: uppercase;
+    }
+    .how-title {
+      margin-top: 0.5rem;
+      font-size: 1.05rem;
+      font-weight: 590;
+      letter-spacing: -0.02em;
+      color: var(--dmi-text);
+    }
+    .how-desc {
+      margin-top: 0.45rem;
+      font-size: 0.88rem;
+      color: var(--dmi-secondary);
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       FINAL CTA
+       ============================================================ */
+    .cta {
+      position: relative;
+      margin: 0 auto;
+      padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 4vw, 3rem);
+      max-width: 1180px;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-2xl);
+      background: linear-gradient(180deg, var(--dmi-brand-500) 0%, var(--dmi-brand-700) 100%);
+      color: #fff;
+      overflow: hidden;
+      text-align: center;
+    }
+    .cta::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(to right,  rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, #000 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, #000 30%, transparent 80%);
+      pointer-events: none;
+    }
+    .cta-content { position: relative; }
+    .cta-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--dmi-radius-pill);
+      background: rgba(255, 255, 255, 0.05);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .cta-heading {
+      margin: 1.4rem auto 0;
+      max-width: 720px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 510;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+    .cta-heading em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      font-size: 1.04em;
+    }
+    .cta-sub {
+      margin: 1.2rem auto 0;
+      max-width: 540px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+    .cta-buttons {
+      display: inline-flex; flex-wrap: wrap; gap: 0.6rem;
+      margin-top: 1.85rem;
+      justify-content: center;
+    }
+    .cta-btn-primary {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      height: 2.65rem; padding: 0 1.2rem;
+      border: none;
+      border-radius: var(--dmi-radius-pill);
+      background: #fff;
+      color: var(--dmi-text);
+      font-size: 0.95rem;
+      font-weight: 540;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: transform var(--dmi-duration-base) var(--ease-out),
+                  box-shadow var(--dmi-duration-base) var(--ease-out);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 6px 16px rgba(0, 0, 0, 0.18);
+    }
+    .cta-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 10px 22px rgba(0, 0, 0, 0.24); }
+    .cta-btn-secondary {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      height: 2.65rem; padding: 0 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--dmi-radius-pill);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 540;
+      cursor: pointer;
+      transition: background var(--dmi-duration-base) var(--ease-out),
+                  border-color var(--dmi-duration-base) var(--ease-out);
+    }
+    .cta-btn-secondary:hover { background: rgba(255, 255, 255, 0.10); border-color: rgba(255, 255, 255, 0.28); }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    footer {
+      margin-top: auto;
+      padding: 1.5rem 0 1.6rem;
+      border-top: 1px solid var(--dmi-border);
+    }
+    .foot {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .foot-meta { color: var(--dmi-tertiary); font-size: 0.82rem; }
+    .foot-links { display: flex; gap: 1.4rem; }
+    .foot-link {
+      color: var(--dmi-secondary);
+      font-size: 0.86rem;
+      transition: color var(--dmi-duration-base) var(--ease-out);
+    }
+    .foot-link:hover { color: var(--dmi-text); }
+
+    /* ============================================================
+       LEAD CAPTURE - static section + reusable form
+       ============================================================ */
+    .lead-section {
+      border-top: 1px solid var(--dmi-border);
+    }
+    .lead-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2.5rem, 6vw, 5rem);
+    }
+    @media (max-width: 920px) {
+      .lead-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+
+    .lead-copy { padding-top: 0.25rem; }
+
+    /* Report-cover visual — front card + tilted back page peek for depth */
+    .lead-visual {
+      position: relative;
+      margin-top: 2.25rem;
+      max-width: 440px;
+    }
+    .lead-visual-back {
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-xl);
+      background: var(--dmi-panel);
+      transform: translate(7px, 9px) rotate(1.6deg);
+      transform-origin: top left;
+      box-shadow: var(--dmi-shadow-soft);
+      z-index: 0;
+    }
+    .lead-visual-card {
+      position: relative;
+      z-index: 1;
+      padding: 1.25rem 1.4rem 1.4rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-xl);
+      background: var(--dmi-panel);
+      box-shadow: var(--dmi-shadow-soft);
+    }
+    .lead-visual-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .lead-visual-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dmi-tertiary);
+    }
+    .lead-visual-tag {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 540;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dmi-tertiary);
+      padding: 0.18rem 0.5rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-xs);
+    }
+
+    .lead-visual-stat-row {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .lead-visual-stat-label {
+      font-size: 0.86rem;
+      font-weight: 540;
+      color: var(--dmi-text);
+      letter-spacing: -0.01em;
+    }
+    .lead-visual-stat-trend {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 540;
+      letter-spacing: 0.02em;
+      color: var(--dmi-success);
+    }
+    .lead-visual-stat-trend svg {
+      width: 11px; height: 11px;
+      color: currentColor;
+    }
+    .lead-visual-bars {
+      display: flex; align-items: flex-end;
+      gap: 5px;
+      height: 56px;
+      margin-top: 0.7rem;
+    }
+    .lead-visual-bars span {
+      flex: 1;
+      background: var(--dmi-text);
+      border-radius: 2px;
+      min-height: 3px;
+    }
+    .lead-visual-bars span:nth-child(1) { opacity: 0.18; }
+    .lead-visual-bars span:nth-child(2) { opacity: 0.30; }
+    .lead-visual-bars span:nth-child(3) { opacity: 0.45; }
+    .lead-visual-bars span:nth-child(4) { opacity: 0.60; }
+    .lead-visual-bars span:nth-child(5) { opacity: 0.75; }
+    .lead-visual-bars span:nth-child(6) { opacity: 0.88; }
+    .lead-visual-bars span:nth-child(7) { opacity: 1; }
+
+    .lead-visual-divider {
+      height: 1px;
+      margin: 1.05rem 0;
+      background: var(--dmi-border-subtle);
+    }
+
+    .lead-visual-list {
+      display: flex; flex-direction: column;
+      gap: 0.55rem;
+      font-size: 0.9rem;
+      color: var(--dmi-secondary);
+      line-height: 1.45;
+    }
+    .lead-visual-list li {
+      display: flex; align-items: center; gap: 0.65rem;
+      letter-spacing: -0.005em;
+    }
+    .lead-visual-list li::before {
+      content: "+";
+      flex-shrink: 0;
+      width: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 590;
+      color: var(--dmi-text);
+      line-height: 1;
+      text-align: center;
+    }
+
+    @media (max-width: 920px) {
+      .lead-visual { max-width: 100%; }
+    }
+
+    /* Form */
+    .lead-form-host {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    /* When the form is in success state, vertically center the (smaller)
+       confirmation card within its grid cell so it sits aligned with
+       the rest of the left column instead of floating at the top. */
+    .lead-form-host:has([data-state="success"]) {
+      justify-content: center;
+    }
+    .lead-form {
+      width: 100%;
+      display: flex; flex-direction: column;
+      gap: 1.05rem;
+      padding: 1.6rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-2xl);
+      background: var(--dmi-panel);
+    }
+    .lead-field { display: flex; flex-direction: column; gap: 0.45rem; }
+    .lead-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    @media (max-width: 480px) {
+      .lead-row { grid-template-columns: 1fr; gap: 1.05rem; }
+    }
+    .lead-field-label,
+    .lead-form label {
+      font-size: 0.78rem;
+      font-weight: 540;
+      color: var(--dmi-secondary);
+      letter-spacing: -0.005em;
+    }
+    .lead-form input[type="text"],
+    .lead-form input[type="email"],
+    .lead-form textarea {
+      width: 100%;
+      padding: 0.7rem 0.85rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-md);
+      background: var(--dmi-panel);
+      color: var(--dmi-text);
+      font-size: 0.94rem;
+      font-family: inherit;
+      line-height: 1.45;
+      outline: none;
+      transition: border-color var(--dmi-duration-base) var(--ease-out),
+                  box-shadow var(--dmi-duration-base) var(--ease-out);
+    }
+    .lead-form input:focus,
+    .lead-form textarea:focus {
+      border-color: var(--dmi-accent);
+      box-shadow: 0 0 0 3px var(--dmi-accent-soft);
+    }
+    .lead-form textarea { resize: vertical; min-height: 4.6rem; }
+    .lead-form input::placeholder,
+    .lead-form textarea::placeholder { color: var(--dmi-quaternary); }
+
+    /* Industry pills - 2-col grid, full radius, 0.5px border, uppercase 12px */
+    .lead-pills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+    .lead-pill {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.6rem 0.9rem;
+      border: 0.5px solid var(--dmi-border-med);
+      border-radius: var(--dmi-radius-pill);
+      background: var(--dmi-panel);
+      color: var(--dmi-text);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 540;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background var(--dmi-duration-base) var(--ease-out),
+                  border-color var(--dmi-duration-base) var(--ease-out),
+                  color var(--dmi-duration-base) var(--ease-out);
+    }
+    .lead-pill svg {
+      flex-shrink: 0;
+      width: 14px; height: 14px;
+      color: currentColor;
+    }
+    .lead-pill:hover { border-color: var(--dmi-text); }
+    .lead-pill[aria-checked="true"] {
+      background: var(--dmi-text);
+      border-color: var(--dmi-text);
+      color: #fff;
+    }
+    .lead-pill[aria-checked="true"]:hover { background: var(--dmi-brand-400); }
+    .lead-input-other {
+      margin-top: 0.55rem;
+    }
+    .lead-input-other[hidden] { display: none; }
+
+    /* Submit button - full width, dark */
+    .lead-submit {
+      width: 100%;
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 2.85rem; padding: 0 1.2rem;
+      border: none;
+      border-radius: var(--dmi-radius-pill);
+      background: var(--dmi-text);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 540;
+      letter-spacing: -0.005em;
+      cursor: pointer;
+      transition: background var(--dmi-duration-base) var(--ease-out);
+    }
+    .lead-submit:hover:not(:disabled) { background: var(--dmi-brand-400); }
+    .lead-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .lead-msg {
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      display: none;
+      letter-spacing: -0.005em;
+    }
+    .lead-msg.is-error   { display: block; color: var(--dmi-error); }
+    .lead-msg.is-success { display: block; color: var(--dmi-success); }
+
+    .lead-foot {
+      margin: 0;
+      font-size: 0.78rem;
+      color: var(--dmi-tertiary);
+      text-align: center;
+      letter-spacing: -0.005em;
+    }
+
+    /* Success state - swaps in where the form fields were */
+    .lead-form-fields {
+      display: flex; flex-direction: column;
+      gap: 1.05rem;
+    }
+    .lead-form-fields[hidden] { display: none; }
+
+    .lead-success {
+      display: flex; flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.7rem;
+      padding: 1.25rem 0.5rem 0.75rem;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: leadSuccessIn 0.5s var(--ease-spring) forwards;
+    }
+    .lead-success[hidden] {
+      display: none;
+      animation: none;
+    }
+    @keyframes leadSuccessIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .lead-success-icon {
+      width: 60px; height: 60px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid var(--dmi-border-med);
+      border-radius: 50%;
+      color: var(--dmi-text);
+      background: var(--dmi-panel);
+    }
+    .lead-success-icon svg { width: 26px; height: 26px; }
+    .lead-success-title {
+      margin: 0.6rem 0 0;
+      font-size: 1.45rem;
+      font-weight: 510;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      color: var(--dmi-text);
+    }
+    .lead-success-msg {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: var(--dmi-secondary);
+      max-width: 34ch;
+    }
+    .lead-success-msg em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.06em;
+      letter-spacing: -0.01em;
+      color: var(--dmi-text);
+    }
+    .lead-success-foot {
+      margin: 0.85rem 0 0;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--dmi-border-subtle);
+      width: 100%;
+      max-width: 22rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      color: var(--dmi-tertiary);
+    }
+    .lead-success-foot strong {
+      font-weight: 540;
+      color: var(--dmi-secondary);
+    }
+
+    /* ============================================================
+       LEAD MODAL - timed overlay (10s, once per session)
+       ============================================================ */
+    .lead-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center; justify-content: center;
+      padding: 1.5rem;
+      background: rgba(15, 16, 17, 0.55);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      transition: opacity 0.2s var(--ease-out);
+    }
+    .lead-modal.is-open { display: flex; }
+    .lead-modal.is-visible { opacity: 1; }
+
+    .lead-modal-card {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      max-height: calc(100vh - 3rem);
+      overflow-y: auto;
+      padding: 1.75rem;
+      border: 1px solid var(--dmi-border);
+      border-radius: var(--dmi-radius-2xl);
+      background: var(--dmi-panel);
+      transform: scale(0.96);
+      opacity: 0;
+      transition: transform 0.2s var(--ease-out),
+                  opacity 0.2s var(--ease-out);
+    }
+    .lead-modal.is-visible .lead-modal-card {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* Header is a flex row: text on the left grows, close in the corner.
+       align-items: flex-start ensures the close vertically aligns with
+       the FIRST LINE of the title rather than the optical center of the
+       whole text block (which would visually drift down on multi-line). */
+    .lead-modal-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .lead-modal-head-text { flex: 1; min-width: 0; }
+
+    .lead-modal-close {
+      flex-shrink: 0;
+      width: 2rem; height: 2rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: none;
+      border-radius: var(--dmi-radius-pill);
+      background: transparent;
+      color: var(--dmi-tertiary);
+      cursor: pointer;
+      /* Nudge up slightly so the icon optical-centers with the title's
+         first-line cap height (it's 32px tall, the title line is shorter). */
+      margin-top: -0.2rem;
+      margin-right: -0.4rem;
+      transition: background var(--dmi-duration-base) var(--ease-out),
+                  color var(--dmi-duration-base) var(--ease-out);
+    }
+    .lead-modal-close svg { width: 16px; height: 16px; }
+    .lead-modal-close:hover {
+      background: var(--dmi-surface);
+      color: var(--dmi-text);
+    }
+    .lead-modal-title {
+      font-size: 1.4rem;
+      font-weight: 510;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      color: var(--dmi-text);
+    }
+    .lead-modal-title em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      font-size: 1.04em;
+    }
+    .lead-modal-sub {
+      margin-top: 0.5rem;
+      font-size: 0.92rem;
+      color: var(--dmi-secondary);
+      line-height: 1.5;
+    }
+    .lead-modal .lead-form {
+      border: none;
+      padding: 0;
+      background: transparent;
+    }
+
+    /* ---------- Mobile bottom-sheet modal ----------
+       - Modal has a small horizontal padding so the card has side bezels
+         instead of going edge-to-edge.
+       - max-height: 92dvh leaves a peek of backdrop so users can tap
+         outside to dismiss even when the form is tall.
+       - dvh accounts for Safari URL bar and on-screen keyboard resizing.
+       - Close stays correctly aligned with the title via the flex header
+         layout (.lead-modal-head as a flex row, defined above). */
+    @media (max-width: 600px) {
+      .lead-modal {
+        align-items: flex-end;
+        /* Bezels on all four sides. Bottom uses the safe-area inset so the
+           card never collides with the home indicator on iOS. */
+        padding: 0 0.65rem max(0.65rem, env(safe-area-inset-bottom));
+      }
+
+      .lead-modal-card {
+        display: flex; flex-direction: column;
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        max-height: 90vh;
+        max-height: 90dvh;
+        padding: 1.4rem 1.25rem 1.25rem;
+        /* Card has bezels all around now → round all four corners */
+        border-radius: var(--dmi-radius-2xl);
+        transform: translateY(20px);
+      }
+      .lead-modal.is-visible .lead-modal-card { transform: translateY(0); }
+
+      /* Header: keep the new flex-row alignment; just tune sizes */
+      .lead-modal-head {
+        margin-bottom: 1rem;
+        gap: 0.6rem;
+      }
+      .lead-modal-title {
+        font-size: 1.25rem;
+        line-height: 1.2;
+        letter-spacing: -0.022em;
+      }
+      .lead-modal-sub {
+        margin-top: 0.4rem;
+        font-size: 0.86rem;
+        line-height: 1.45;
+      }
+
+      /* Form: tighter and explicitly sized so no cascade weirdness */
+      .lead-modal .lead-form { gap: 0.85rem; }
+      .lead-modal .lead-form-fields { gap: 0.85rem; }
+      .lead-modal .lead-field { gap: 0.35rem; }
+
+      /* Force the field labels to a sane small size on mobile.
+         Higher specificity (.lead-modal scope) and explicit value beats
+         any default UA / boosted text styling. */
+      .lead-modal .lead-form label,
+      .lead-modal .lead-field-label {
+        font-size: 0.75rem;
+        font-weight: 540;
+        line-height: 1.3;
+        color: var(--dmi-secondary);
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      /* Inputs: 16px font-size prevents iOS Safari auto-zoom on focus,
+         which is the #1 source of "form looks weird on mobile" issues. */
+      .lead-modal .lead-form input[type="text"],
+      .lead-modal .lead-form input[type="email"],
+      .lead-modal .lead-form textarea {
+        font-size: 16px;
+        padding: 0.65rem 0.8rem;
+      }
+      .lead-modal .lead-form textarea {
+        min-height: 3.6rem;
+      }
+
+      /* Pills: compact 2-col on mobile, smaller text */
+      .lead-modal .lead-pills { gap: 0.4rem; }
+      .lead-modal .lead-pill {
+        padding: 0.5rem 0.7rem;
+        font-size: 11px;
+        gap: 0.4rem;
+      }
+      .lead-modal .lead-pill svg { width: 12px; height: 12px; }
+
+      /* Submit + footnote */
+      .lead-modal .lead-submit { height: 2.65rem; font-size: 0.9rem; }
+      .lead-modal .lead-foot { font-size: 0.72rem; }
+    }
+
+    /* Apply the iOS no-zoom rule to BOTH static and modal forms on mobile.
+       Any input < 16px font-size triggers a viewport zoom on iOS Safari
+       when the user focuses the field, which is jarring. */
+    @media (max-width: 600px) {
+      .lead-form input[type="text"],
+      .lead-form input[type="email"],
+      .lead-form textarea {
+        font-size: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .lead-modal,
+      .lead-modal-card { transition: none; }
+    }
+
+    /* ============================================================
+       SCROLL REVEAL
+       ============================================================ */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s var(--ease-spring), transform 0.8s var(--ease-spring); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       UTILITY
+       ============================================================ */
+    .arrow-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .arrow-icon svg { width: 14px; height: 14px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       NAV
+       ============================================================ -->
+  <div class="nav-wrap">
+    <nav class="nav" id="nav">
+      <a href="#hero" class="nav-brand" aria-label="Netter home">
+        <img class="nav-logo" src="/netter-logo.svg" alt="Netter" />
+      </a>
+
+      <div class="nav-links">
+        <a href="#platform" class="nav-link">Platform</a>
+        <a href="#flow"     class="nav-link">How it works</a>
+        <a href="#cases"    class="nav-link">Use cases</a>
+        <a href="#contact"  class="nav-link">Contact</a>
+      </div>
+
+      <div class="nav-spacer"></div>
+
+      <a href="https://calendly.com/samuel-netterai/30min?month=2026-03"
+         target="_blank" rel="noopener"
+         class="nav-cta">
+        Book a demo
+      </a>
+    </nav>
+  </div>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <header id="hero" class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <span class="yc-pill">
+          <span>Backed by</span>
+          <span class="yc-brand">
+            <img class="yc-mark" src="assets/yc-logo.svg" alt="Y Combinator" width="18" height="18" />
+            <span>Combinator</span>
+          </span>
+        </span>
+
+        <h1 class="hero-heading">
+          Switch on your data.
+        </h1>
+
+        <p class="hero-sub">
+          Netter centralizes your scattered data to deploy analytics, workflows and ML models.
+        </p>
+
+        <form class="composer-wrap" id="composerForm" autocomplete="off">
+          <div class="composer">
+            <div class="composer-input-wrap">
+              <textarea
+                id="composerInput"
+                class="composer-input"
+                rows="1"
+                placeholder="Build a weekly revenue health report from Stripe and HubSpot."
+                aria-label="Tell Netter what you'd like to build"></textarea>
+            </div>
+            <div class="composer-toolbar">
+              <button type="submit" class="submit" id="composerSubmit" aria-label="Book a demo to start">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 19V5M5 12l7-7 7 7"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <p class="hero-foot">
+          See Netter turn your scattered data into running systems. Live, in 30 minutes.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       DASHBOARD PREVIEW (Hessian style)
+       ============================================================ -->
+  <section id="platform" class="preview" aria-label="Netter dashboard preview">
+    <div class="preview-stage">
+      <div class="preview-frame">
+        <div class="preview-chrome">
+          <span class="preview-dot"></span>
+          <span class="preview-dot"></span>
+          <span class="preview-dot"></span>
+          <span class="preview-url">app.netterai.org/projects/main</span>
+        </div>
+        <img src="assets/netter-dashboard.png" alt="Netter dashboard showing an email classifier workflow" class="preview-img" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FLOW SECTION - sources → Netter AI → outputs
+       ============================================================ -->
+  <section id="flow" class="section flow-section">
+    <div class="container">
+      <div class="flow-grid">
+        <div class="reveal">
+          <span class="sect-eyebrow">The platform</span>
+          <h2 class="sect-heading">
+            A nervous system to <br />
+            <em>reconcile tools and teams.</em> 
+          </h2>
+          <p class="sect-sub">
+            Netter centralizes every source you already run on, cleans and enriches it into a living ontology, then lets your teams turn it into dashboards, workflows and apps through a chat, not a ticket.
+          </p>
+          <div style="display: flex; gap: 1.4rem; margin-top: 1.6rem; flex-wrap: wrap;">
+            <div>
+              <div style="font-size: 1.6rem; font-weight: 590; letter-spacing: -0.03em;">120+</div>
+              <div style="font-size: 0.84rem; color: var(--dmi-tertiary); margin-top: 0.15rem;">Native connectors</div>
+            </div>
+            <div>
+              <div style="font-size: 1.6rem; font-weight: 590; letter-spacing: -0.03em;">~4 hrs</div>
+              <div style="font-size: 0.84rem; color: var(--dmi-tertiary); margin-top: 0.15rem;">From idea to deployed app</div>
+            </div>
+            <div>
+              <div style="font-size: 1.6rem; font-weight: 590; letter-spacing: -0.03em;">0</div>
+              <div style="font-size: 0.84rem; color: var(--dmi-tertiary); margin-top: 0.15rem;">Engineers required</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <div class="platform-illust">
+            <svg viewBox="0 0 560 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <radialGradient id="hubGradient" cx="35%" cy="30%" r="80%">
+                  <stop offset="0%"   stop-color="#2d2d39"/>
+                  <stop offset="65%"  stop-color="#0f1011"/>
+                  <stop offset="100%" stop-color="#0a0a0e"/>
+                </radialGradient>
+                <radialGradient id="hubHalo" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"   stop-color="rgba(28,28,35,0.10)"/>
+                  <stop offset="55%"  stop-color="rgba(28,28,35,0.04)"/>
+                  <stop offset="100%" stop-color="rgba(28,28,35,0)"/>
+                </radialGradient>
+                <symbol id="netterN" viewBox="0 0 140 150">
+                  <path d="M6.54 0.09C7.16-0.01 8.08 0.04 8.73 0.04 10.91 0.05 13.10 0.06 15.28 0.06L40.44 0.05C43.61 0.05 46.68-0.53 49.15 2.34 50.16 3.50 50.87 5.01 51.18 6.66 51.49 8.40 51.36 12.74 51.37 14.77 51.38 20.97 51.34 27.18 51.34 33.39 51.34 37.26 53.30 40.22 56.43 40.89 57.52 41.12 59.31 41.04 60.47 41.04L67.58 41.01C69.02 41.00 71.55 40.87 72.87 41.27 73.95 41.58 74.94 42.24 75.74 43.19 77.19 44.89 77.61 47.09 77.57 49.45 77.54 51.50 77.55 53.59 77.55 55.64L77.56 70.87C77.56 73.13 77.51 75.41 77.56 77.67 77.61 79.98 78.16 81.93 79.58 83.52 80.41 84.45 81.43 85.01 82.53 85.28 84.55 85.78 87.29 85.45 89.38 85.46 92.44 85.46 95.55 85.62 98.61 85.46 101.21 85.33 103.52 83.58 104.49 80.56 105.14 78.53 104.84 69.49 104.84 66.85L104.84 25.40 104.83 13.78C104.83 11.85 104.70 9.28 104.91 7.43 105.41 2.94 108.47 0.04 112.15 0.05 117.97 0.06 123.84 0.06 129.66 0.05 131.16 0.05 133.02-0.10 134.47 0.27 135.75 0.59 136.94 1.35 137.88 2.46 139.32 4.14 139.98 6.48 139.98 8.87 139.98 18.56 139.98 28.26 139.98 37.95L139.99 137.36C139.99 138.65 140.04 140.99 139.93 142.22 139.77 144.10 139.08 145.86 137.99 147.21 135.65 150.10 133.00 149.76 129.96 149.76L124.90 149.75 96.73 149.75 88.43 149.76C85.59 149.77 82.72 150.25 80.30 148.06 76.73 144.82 77.46 139.51 77.46 134.61L77.47 114.97C77.48 111.91 77.60 108.04 77.39 105.08 77.16 101.95 74.80 99.21 72.28 98.81 71.04 98.61 69.42 98.68 68.10 98.68L60.74 98.70C59.05 98.71 57.31 98.81 55.65 98.49 53.29 98.04 51.03 95.36 50.75 92.45 50.52 90.19 50.63 87.50 50.63 85.20L50.64 68.87C50.64 66.03 50.83 62.95 50.53 60.15 50.31 58.06 49.55 56.37 48.15 55.12 46.37 53.54 44.35 53.63 42.25 53.63 41.31 53.63 40.35 53.61 39.42 53.77 37.33 54.15 35.39 55.86 34.66 58.33 33.88 61.01 34.23 72.14 34.23 75.78L34.23 134.95C34.25 138.50 34.76 143.41 32.92 146.31 31.77 148.13 30.07 149.33 28.20 149.64 27.07 149.83 25.43 149.76 24.26 149.75L18.20 149.74 10.48 149.76C7.56 149.76 5.16 150.21 2.72 147.89 1.27 146.53 0.34 144.52 0.12 142.32-0.03 140.75 0.04 137.96 0.04 136.26L0.04 16.96C0.04 13.91-0.07 10.63 0.08 7.61 0.29 3.35 3.27 0.53 6.54 0.09Z" fill="#ffffff"/>
+                </symbol>
+              </defs>
+
+              <!-- ============== CONNECTING LINES ============== -->
+              <!-- All lines fan in/out to the hub center (280, 221).
+                   Endpoints sit inside the opaque hub circle so the curves
+                   read as "merging into" Netter rather than ending visibly. -->
+              <!-- Inputs: cards (right edge x=185) → hub center -->
+              <path class="pi-line pi-line-1" d="M 185 93  C 218 93,  240 221, 280 221"/>
+              <path class="pi-line pi-line-2" d="M 185 157 C 218 157, 245 221, 280 221"/>
+              <path class="pi-line pi-line-3" d="M 185 221 C 218 221, 250 221, 280 221"/>
+              <path class="pi-line pi-line-4" d="M 185 285 C 218 285, 245 221, 280 221"/>
+              <path class="pi-line pi-line-5" d="M 185 349 C 218 349, 240 221, 280 221"/>
+
+              <!-- Outputs: hub center → cards (left edge x=375) -->
+              <path class="pi-line pi-line-1" d="M 280 221 C 320 221, 342 93,  375 93"/>
+              <path class="pi-line pi-line-2" d="M 280 221 C 315 221, 347 157, 375 157"/>
+              <path class="pi-line pi-line-3" d="M 280 221 C 310 221, 342 221, 375 221"/>
+              <path class="pi-line pi-line-4" d="M 280 221 C 315 221, 347 285, 375 285"/>
+              <path class="pi-line pi-line-5" d="M 280 221 C 320 221, 342 349, 375 349"/>
+
+              <!-- Travelling pulse on selected lines for the data-flow feel -->
+              <path class="pi-pulse"                d="M 185 157 C 218 157, 245 221, 280 221"/>
+              <path class="pi-pulse pi-pulse-out"   d="M 280 221 C 315 221, 347 157, 375 157"/>
+              <path class="pi-pulse pi-pulse-2"     d="M 185 285 C 218 285, 245 221, 280 221"/>
+              <path class="pi-pulse pi-pulse-2-out" d="M 280 221 C 315 221, 347 285, 375 285"/>
+
+              <!-- ============== HUB (round Netter mark) ============== -->
+              <!-- Soft halo (radial gradient) and rotating dashed ring -->
+              <circle cx="280" cy="221" r="92" fill="url(#hubHalo)"/>
+              <circle cx="280" cy="221" r="80" fill="none"
+                      stroke="rgba(15,16,17,0.10)" stroke-width="1"
+                      stroke-dasharray="3 5">
+                <animateTransform attributeName="transform" type="rotate"
+                                  from="0 280 221" to="360 280 221"
+                                  dur="22s" repeatCount="indefinite"/>
+              </circle>
+
+              <!-- Main hub circle — radial gradient for depth -->
+              <circle cx="280" cy="221" r="58"
+                      fill="url(#hubGradient)"
+                      stroke="rgba(15,16,17,0.25)" stroke-width="1"/>
+
+              <!-- Netter N glyph centred -->
+              <use href="#netterN" x="255" y="195" width="50" height="54"/>
+
+            </svg>
+
+            <!-- ========== HTML CARDS — auto-width pills ========== -->
+            <!-- Left side (data sources) — anchored by RIGHT edge so they
+                 grow leftward as labels get longer. Right edge sits at
+                 66.96% from the right, which is SVG x=195 — exactly where
+                 the line endpoints land. -->
+            <div class="pi-card pi-card-l pi-card-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                <path d="M3 5v6c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+                <path d="M3 11v6c0 1.66 4.03 3 9 3s9-1.34 9-3v-6"/>
+              </svg>
+              Databases
+            </div>
+            <div class="pi-card pi-card-l pi-card-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                <rect x="14" y="14" width="7" height="7" rx="1"/>
+              </svg>
+              Applications
+            </div>
+            <div class="pi-card pi-card-l pi-card-3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+              </svg>
+              APIs
+            </div>
+            <div class="pi-card pi-card-l pi-card-4">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              Files &amp; Docs
+            </div>
+            <div class="pi-card pi-card-l pi-card-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                <circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+              IoT &amp; Sensors
+            </div>
+
+            <!-- Right side (outputs) — anchored by LEFT edge so they grow
+                 rightward as labels get longer. Left edge sits at SVG
+                 x=365 (66.96%). -->
+            <div class="pi-card pi-card-r pi-card-1">
+              <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+              Workflows
+            </div>
+            <div class="pi-card pi-card-r pi-card-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="8" width="16" height="12" rx="2"/>
+                <path d="M12 8V4"/>
+                <line x1="9" y1="13" x2="9" y2="15"/>
+                <line x1="15" y1="13" x2="15" y2="15"/>
+                <path d="M2 14h2M20 14h2"/>
+              </svg>
+              AI Agent
+            </div>
+            <div class="pi-card pi-card-r pi-card-3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+              </svg>
+              Alerts
+            </div>
+            <div class="pi-card pi-card-r pi-card-4">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="6"  y1="20" x2="6"  y2="16"/>
+                <line x1="12" y1="20" x2="12" y2="10"/>
+                <line x1="18" y1="20" x2="18" y2="4"/>
+              </svg>
+              Analytics
+            </div>
+            <div class="pi-card pi-card-r pi-card-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="6"  cy="6"  r="2" fill="currentColor" stroke="none"/>
+                <circle cx="6"  cy="18" r="2" fill="currentColor" stroke="none"/>
+                <circle cx="18" cy="12" r="2" fill="currentColor" stroke="none"/>
+                <line x1="8" y1="6"  x2="16" y2="11"/>
+                <line x1="8" y1="18" x2="16" y2="13"/>
+              </svg>
+              ML Pipeline
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       USE CASES
+       ============================================================ -->
+  <section id="cases" class="section" style="border-top: 1px solid var(--dmi-border);">
+    <div class="container">
+      <div class="reveal" style="max-width: 720px;">
+        <span class="sect-eyebrow">Use cases</span>
+        <h2 class="sect-heading">Concrete use cases,<br /><em>deployed on Netter.</em></h2>
+        <p class="sect-sub">Already running in companies where data lives in too many places.</p>
+      </div>
+
+      <div class="industries-strip reveal">
+        <span class="industry-chip">
+          <span class="industry-chip-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 4h4v6h6v4h-6v6h-4v-6H4v-4h6z"/>
+            </svg>
+          </span>
+          Healthcare
+        </span>
+
+        <span class="industry-chip">
+          <span class="industry-chip-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 8h14l-1 12H6z"/>
+              <path d="M9 8a3 3 0 0 1 6 0"/>
+            </svg>
+          </span>
+          Retail
+        </span>
+
+        <span class="industry-chip">
+          <span class="industry-chip-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21V11l5 3V11l5 3V8l8 4v9z"/>
+              <path d="M7 17h1.5M11 17h1.5M15 17h1.5"/>
+            </svg>
+          </span>
+          Manufacturing
+        </span>
+
+        <span class="industry-chip">
+          <span class="industry-chip-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7h11v10H3z"/>
+              <path d="M14 10h4l3 3v4h-7z"/>
+              <circle cx="7" cy="18" r="1.6"/>
+              <circle cx="17" cy="18" r="1.6"/>
+            </svg>
+          </span>
+          Logistics
+        </span>
+
+        <span class="industry-chip">
+          <span class="industry-chip-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 21V4h10v17M14 21V9h6v12"/>
+              <path d="M7 8h2M7 12h2M7 16h2M16 13h2M16 17h2"/>
+            </svg>
+          </span>
+          Real estate
+        </span>
+      </div>
+
+      <!-- Primary tier - three detailed use cases -->
+      <div class="uc-grid-primary">
+
+        <!-- 1. Market intelligence & sell-out operations -->
+        <article class="uc-card-primary reveal">
+          <div class="uc-visual" aria-hidden="true">
+            <div class="uc-feed-row">
+              <span class="uc-feed-dot"></span>
+              <div class="uc-feed-body">
+                <div class="uc-feed-title">Carrefour FR · Sell-out spike</div>
+                <div class="uc-feed-meta">SKU-A102 · +18% w/w</div>
+              </div>
+            </div>
+            <div class="uc-feed-row">
+              <span class="uc-feed-dot"></span>
+              <div class="uc-feed-body">
+                <div class="uc-feed-title">Tesco UK · Stock-out risk</div>
+                <div class="uc-feed-meta">SKU-B205 · 4d cover left</div>
+              </div>
+            </div>
+            <div class="uc-feed-row">
+              <span class="uc-feed-dot"></span>
+              <div class="uc-feed-body">
+                <div class="uc-feed-title">Auchan ES · Promo lag</div>
+                <div class="uc-feed-meta">SKU-C447 · -22% vs target</div>
+              </div>
+            </div>
+          </div>
+          <div class="uc-body">
+            <span class="uc-icon-clean" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 17 9 11 13 15 21 7"/>
+                <polyline points="14 7 21 7 21 14"/>
+              </svg>
+            </span>
+            <h3 class="uc-title">Market intelligence &amp; sell-out</h3>
+            <p class="uc-pain">Sell-out, CRM and e-comm live in silos. Weekly reports always lag the shelf.</p>
+            <ul class="uc-bullets">
+              <li>Reconcile sell-in and sell-out automatically across every channel</li>
+              <li>Enrich with geography and socio-demographic signals</li>
+              <li>Forecast by SKU, region and channel. Refreshed live, not weekly</li>
+            </ul>
+            <div class="uc-foot"><span class="uc-tag">Retail · Distribution</span></div>
+          </div>
+        </article>
+
+        <!-- 2. Recovering dormant receivables -->
+        <article class="uc-card-primary reveal">
+          <div class="uc-visual" aria-hidden="true">
+            <div class="uc-inv-row">
+              <span class="uc-inv-id">INV-9821</span>
+              <span class="uc-inv-co">Site Lille</span>
+              <span class="uc-inv-amt">€3.2K</span>
+              <span class="uc-inv-status uc-inv-status--matched">Matched</span>
+            </div>
+            <div class="uc-inv-row">
+              <span class="uc-inv-id">INV-9822</span>
+              <span class="uc-inv-co">Site Lyon</span>
+              <span class="uc-inv-amt">€1.4K</span>
+              <span class="uc-inv-status uc-inv-status--anomaly">Anomaly</span>
+            </div>
+            <div class="uc-inv-row">
+              <span class="uc-inv-id">INV-9823</span>
+              <span class="uc-inv-co">Site Nice</span>
+              <span class="uc-inv-amt">€5.7K</span>
+              <span class="uc-inv-status uc-inv-status--dunning">Dunning</span>
+            </div>
+          </div>
+          <div class="uc-body">
+            <span class="uc-icon-clean" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="8" y1="13" x2="16" y2="13"/>
+                <line x1="8" y1="17" x2="13" y2="17"/>
+              </svg>
+            </span>
+            <h3 class="uc-title">Dormant receivables</h3>
+            <p class="uc-pain">Billing and treasury don't talk. Millions sit unreconciled across sites.</p>
+            <ul class="uc-bullets">
+              <li>Recover ~10% of dormant receivables within weeks of go-live</li>
+              <li>Match every invoice to its payment automatically, site by site</li>
+              <li>Flag anomalies, trigger dunning, give HQ live cash visibility</li>
+            </ul>
+            <div class="uc-foot"><span class="uc-tag">Healthcare · Multi-site</span></div>
+          </div>
+        </article>
+
+        <!-- 3. Network control tower -->
+        <article class="uc-card-primary reveal">
+          <div class="uc-visual" aria-hidden="true">
+            <div class="uc-tower-row">
+              <span class="uc-tower-name">Bordeaux #007</span>
+              <span class="uc-tower-score uc-tower-score--good">92</span>
+            </div>
+            <div class="uc-tower-row">
+              <span class="uc-tower-name">Lyon #018</span>
+              <span class="uc-tower-score uc-tower-score--med">64</span>
+            </div>
+            <div class="uc-tower-row">
+              <span class="uc-tower-name">Nice #061</span>
+              <span class="uc-tower-score uc-tower-score--warn">41</span>
+            </div>
+          </div>
+          <div class="uc-body">
+            <span class="uc-icon-clean" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                <rect x="14" y="14" width="7" height="7" rx="1"/>
+              </svg>
+            </span>
+            <h3 class="uc-title">Network control tower</h3>
+            <p class="uc-pain">POS, ERP, HR, reviews. Fragmented. Margin leaks compound before you see them.</p>
+            <ul class="uc-bullets">
+              <li>Consolidate every store-level source by site ID (POS, ERP, HR, reviews)</li>
+              <li>Score each location 0-100 and surface which sites need attention, why</li>
+              <li>Weekly auto-briefs for area managers, real-time benchmark for HQ</li>
+            </ul>
+            <div class="uc-foot"><span class="uc-tag">Franchise · Multi-site</span></div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Divider into the second tier -->
+      <div class="uc-divider"><span>Also running on Netter</span></div>
+
+      <!-- Secondary tier - three compact use cases -->
+      <div class="uc-grid-secondary">
+        <div class="uc-card-secondary reveal">
+          <span class="uc-icon-small">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 16a8 8 0 1 1 16 0"/>
+              <path d="M12 16l3.5-4.5"/>
+              <circle cx="12" cy="16" r="1.1" fill="currentColor"/>
+              <path d="M6.5 14.5l-1 0.4M17.5 14.5l1 0.4"/>
+            </svg>
+          </span>
+          <div class="uc-sec-body">
+            <span class="uc-title-sm">Predictive maintenance</span>
+            <p class="uc-sec-desc">Unify machine, maintenance and usage data. Predict component failure before it happens, schedule on evidence instead of fixed calendars.</p>
+          </div>
+          <span class="uc-tag-sm">Industrial · Manufacturing</span>
+        </div>
+
+        <div class="uc-card-secondary reveal">
+          <span class="uc-icon-small">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="16" rx="2"/>
+              <path d="M3 10h18"/>
+              <path d="M8 3v4M16 3v4"/>
+              <rect x="7" y="13" width="3" height="2" rx="0.4" fill="currentColor" stroke="none"/>
+              <rect x="14" y="17" width="3" height="2" rx="0.4" fill="currentColor" stroke="none"/>
+            </svg>
+          </span>
+          <div class="uc-sec-body">
+            <span class="uc-title-sm">Constrained scheduling</span>
+            <p class="uc-sec-desc">Pull bookings from incoming emails, solve daily scheduling under delivery, weight and exam constraints, push the plan back into the existing planning tool.</p>
+          </div>
+          <span class="uc-tag-sm">Healthcare · Nuclear medicine</span>
+        </div>
+
+        <div class="uc-card-secondary reveal">
+          <span class="uc-icon-small">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7h11v10H3z"/>
+              <path d="M14 10h4l3 3v4h-7z"/>
+              <circle cx="7" cy="18" r="1.7"/>
+              <circle cx="17" cy="18" r="1.7"/>
+            </svg>
+          </span>
+          <div class="uc-sec-body">
+            <span class="uc-title-sm">Supply chain logistics</span>
+            <p class="uc-sec-desc">Connect TMS, ERP and fleet data into a single operational model. Auto-optimize routes, load plans and costs so trucks stop running half-empty.</p>
+          </div>
+          <span class="uc-tag-sm">Transport · Logistics</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       BENTO (Hessian style - features in a single grid)
+       ============================================================ -->
+  <section class="section" style="border-top: 1px solid var(--dmi-border);">
+    <div class="container">
+      <div class="reveal" style="max-width: 720px;">
+        <span class="sect-eyebrow">What you get</span>
+        <h2 class="sect-heading">
+          Tell us what you need.<br />
+          <em>We build it for you.</em>
+        </h2>
+      </div>
+
+      <div class="bento">
+        <!-- 1. Build with chat -->
+        <div class="bento-cell bento-cell-wide reveal">
+          <h3 class="bento-title">Build with a conversation.</h3>
+          <p class="bento-desc">Describe the outcome. Netter shapes the data flow, picks the operators, and writes the code. You stay in the loop, you don't write it.</p>
+          <div class="bento-visual">
+            <div class="bv-chat">
+              <div class="bv-msg bv-msg-user">Build a weekly revenue health report.</div>
+              <div class="bv-msg">Pulling Stripe and HubSpot. Detecting your fiscal calendar. Suggesting 3 KPIs.</div>
+              <div class="bv-msg-thinking">
+                <span class="bv-dot"></span><span class="bv-dot"></span><span class="bv-dot"></span>
+                <span style="margin-left: 0.25rem;">Drafting the dashboard…</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Connect anything -->
+        <div class="bento-cell bento-cell-small reveal">
+          <h3 class="bento-title">Connect anything.</h3>
+          <p class="bento-desc">120+ native sources: warehouses, SaaS APIs, files, webhooks.</p>
+          <div class="bento-visual" style="align-items: flex-start;">
+            <div class="bv-connectors" aria-hidden="true">
+              <div class="bv-conn">
+                <span class="bv-conn-mono">P</span>
+                <span class="bv-conn-name">Postgres</span>
+                <span class="bv-conn-status bv-conn-status--live"></span>
+              </div>
+              <div class="bv-conn">
+                <span class="bv-conn-mono">S</span>
+                <span class="bv-conn-name">NetSuite</span>
+                <span class="bv-conn-status"></span>
+              </div>
+              <div class="bv-conn">
+                <span class="bv-conn-mono">SF</span>
+                <span class="bv-conn-name">Salesforce</span>
+                <span class="bv-conn-status"></span>
+              </div>
+              <div class="bv-conn">
+                <span class="bv-conn-mono">SN</span>
+                <span class="bv-conn-name">Snowflake</span>
+                <span class="bv-conn-status"></span>
+              </div>
+              <div class="bv-conn-more">+ 116 more</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Workflows that run themselves -->
+        <div class="bento-cell bento-cell-small reveal">
+          <h3 class="bento-title">Workflows that work for you.</h3>
+          <p class="bento-desc">Schedule, trigger, retry, alert. Every step versioned and auditable.</p>
+          <div class="bento-visual">
+            <svg class="bv-graph" viewBox="0 0 280 180" aria-hidden="true">
+              <!-- edges -->
+              <path class="bv-graph-line bv-graph-line-active" d="M 50 30 C 90 30, 100 60, 130 60"/>
+              <path class="bv-graph-line bv-graph-line-active" d="M 130 60 C 165 60, 175 90, 215 90"/>
+              <path class="bv-graph-line" d="M 130 60 C 165 60, 175 130, 215 130"/>
+              <path class="bv-graph-line" d="M 50 90 C 90 90, 100 60, 130 60"/>
+              <!-- nodes -->
+              <rect class="bv-graph-card bv-graph-card-active" x="6"  y="14" width="86" height="32" rx="6"/>
+              <text class="bv-graph-text bv-graph-text-active" x="49" y="34" text-anchor="middle">trigger</text>
+
+              <rect class="bv-graph-card" x="6"  y="74" width="86" height="32" rx="6"/>
+              <text class="bv-graph-text" x="49" y="94" text-anchor="middle">fetch_data</text>
+
+              <rect class="bv-graph-card bv-graph-card-active" x="98" y="44" width="76" height="32" rx="6"/>
+              <text class="bv-graph-text bv-graph-text-active" x="136" y="64" text-anchor="middle">classify</text>
+
+              <rect class="bv-graph-card" x="180" y="74"  width="92" height="32" rx="6"/>
+              <text class="bv-graph-text" x="226" y="94" text-anchor="middle">notify_slack</text>
+
+              <rect class="bv-graph-card" x="180" y="114" width="92" height="32" rx="6"/>
+              <text class="bv-graph-text" x="226" y="134" text-anchor="middle">save_db</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 4. Code-aware SDK -->
+        <div class="bento-cell bento-cell-small reveal">
+          <h3 class="bento-title">Drop down to code anytime.</h3>
+          <p class="bento-desc">Any step is a Python script you can read and edit. Fully dertiministic, no black box.</p>
+          <div class="bento-visual">
+            <div class="bv-code" aria-hidden="true">
+              <span class="bv-code-line"><span class="bv-code-com"># revenue.py</span></span>
+              <span class="bv-code-line"><span class="bv-code-key">from</span> netter <span class="bv-code-key">import</span> step</span>
+              <span class="bv-code-line"></span>
+              <span class="bv-code-line"><span class="bv-code-key">@</span><span class="bv-code-fn">step</span>(retries=<span class="bv-code-key">3</span>)</span>
+              <span class="bv-code-line"><span class="bv-code-key">def</span> <span class="bv-code-fn">classify</span>(invoice):</span>
+              <span class="bv-code-line">    <span class="bv-code-key">return</span> agent(<span class="bv-code-str">"benjamin"</span>)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Real-time logs -->
+        <div class="bento-cell bento-cell-small reveal">
+          <h3 class="bento-title">Observable, end-to-end.</h3>
+          <p class="bento-desc">Every step traced and logged. Filter, search, replay across every workflow.</p>
+          <div class="bento-visual">
+            <div class="bv-logs" aria-hidden="true">
+              <div class="bv-logs-head">
+                <span class="bv-logs-title">runs/run_a1b2c3d4 · logs</span>
+                <span class="bv-logs-live"><span class="bv-logs-live-dot"></span>live</span>
+              </div>
+              <div class="bv-logs-body">
+                <div class="bv-log"><span class="bv-log-t">19:25:58</span><span class="bv-log-tag bv-log-tag--info">INFO</span><span class="bv-log-msg">trigger fired</span></div>
+                <div class="bv-log"><span class="bv-log-t">19:25:59</span><span class="bv-log-tag bv-log-tag--ok">OK</span><span class="bv-log-msg">fetch_data &nbsp;<span class="bv-log-dim">82ms</span></span></div>
+                <div class="bv-log"><span class="bv-log-t">19:26:00</span><span class="bv-log-tag bv-log-tag--info">INFO</span><span class="bv-log-msg">classify started</span></div>
+                <div class="bv-log"><span class="bv-log-t">19:26:01</span><span class="bv-log-tag bv-log-tag--ok">OK</span><span class="bv-log-msg">classify &nbsp;<span class="bv-log-dim">418ms</span></span></div>
+                <div class="bv-log"><span class="bv-log-t">19:26:01</span><span class="bv-log-tag bv-log-tag--info">INFO</span><span class="bv-log-msg">notify_teams queued</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Dashboards in seconds (wide) -->
+        <div class="bento-cell bento-cell-wide reveal">
+          <h3 class="bento-title">Analytics in seconds, not sprints.</h3>
+          <p class="bento-desc">Versioned, queryable, embeddable. Every chart traces back to a single source of truth.</p>
+          <div class="bento-visual">
+            <div class="bv-dash">
+              <div class="bv-dash-row">
+                <div class="bv-stat">
+                  <div class="bv-stat-label">MRR</div>
+                  <div class="bv-stat-value">$1.27M</div>
+                  <div class="bv-stat-delta">+8.4% w/w</div>
+                </div>
+                <div class="bv-stat">
+                  <div class="bv-stat-label">Churn</div>
+                  <div class="bv-stat-value">2.1%</div>
+                  <div class="bv-stat-delta">-0.6 pts</div>
+                </div>
+                <div class="bv-stat">
+                  <div class="bv-stat-label">Active</div>
+                  <div class="bv-stat-value">8,431</div>
+                  <div class="bv-stat-delta">+312</div>
+                </div>
+              </div>
+              <div class="bv-chart" aria-hidden="true">
+                <span class="bv-bar" style="height: 22%"></span>
+                <span class="bv-bar" style="height: 38%"></span>
+                <span class="bv-bar" style="height: 30%"></span>
+                <span class="bv-bar" style="height: 56%"></span>
+                <span class="bv-bar" style="height: 48%"></span>
+                <span class="bv-bar" style="height: 70%"></span>
+                <span class="bv-bar" style="height: 60%"></span>
+                <span class="bv-bar" style="height: 82%"></span>
+                <span class="bv-bar" style="height: 74%"></span>
+                <span class="bv-bar" style="height: 92%"></span>
+                <span class="bv-bar" style="height: 86%"></span>
+                <span class="bv-bar" style="height: 100%"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Secure -->
+        <div class="bento-cell bento-cell-small reveal">
+          <h3 class="bento-title">Secure by design.</h3>
+          <p class="bento-desc">Audit logs, role-based policies, end-to-end encrypted. Already used in high-security environments.</p>
+          <div class="bento-visual">
+            <div class="bv-sec">
+              <div class="bv-sec-grid">A1B7 9E3F C2D8 4567 0F3A E2C9 91D4 A88E
+              57BC F1A9 30D8 C7E6 1B4F A21D 88C3 0E5F 76A9 4D32 EF87 DA2C 51B7 03E9 8A4F C2D1
+              9F5A 78C4 2D03 6B1F E8A2 C49E 17DB 530F 8C2A 4F19 BD61 09E7 41AC 28F0 6E3D 7B85
+              A0F2 5C49 318B 7DAE 0962 C13F E75D 2A48 8014 BF3C 5E9A 21D6 4C8F 0B3E A971 5D24</div>
+              <svg class="bv-sec-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round">
+                <path d="M12 2 4 5v7c0 5 3.5 9 8 10 4.5-1 8-5 8-10V5l-8-3z"/>
+                <path d="M9 12l2 2 4-4"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       HOW IT WORKS
+       ============================================================ -->
+  <section class="section" style="background: var(--dmi-panel-alt); border-top: 1px solid var(--dmi-border);">
+    <div class="container">
+      <div class="reveal" style="max-width: 680px;">
+        <span class="sect-eyebrow">How it works</span>
+        <h2 class="sect-heading">From raw data<br /><em>to running systems.</em></h2>
+      </div>
+
+      <div class="how-grid">
+        <div class="how-card reveal">
+          <span class="how-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 3v5M15 3v5"/>
+              <path d="M5 8h14v3a5 5 0 0 1-5 5h-4a5 5 0 0 1-5-5z"/>
+              <path d="M12 16v5"/>
+            </svg>
+          </span>
+          <div class="how-num">01 / Connect</div>
+          <h3 class="how-title">Plug your sources.</h3>
+          <p class="how-desc">120+ connectors. OAuth, API or SQL. Incremental syncs and schema drift handled.</p>
+        </div>
+        <div class="how-card reveal">
+          <span class="how-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="5" r="2"/>
+              <circle cx="5" cy="13" r="2"/>
+              <circle cx="19" cy="13" r="2"/>
+              <circle cx="9" cy="20" r="1.6"/>
+              <circle cx="15" cy="20" r="1.6"/>
+              <path d="M11 6.6 6 11.4M13 6.6l5 4.8M6 14.8l3 3.6M18 14.8l-3 3.6"/>
+            </svg>
+          </span>
+          <div class="how-num">02 / Structure</div>
+          <h3 class="how-title">Map the ontology.</h3>
+          <p class="how-desc">A living model of your business. One place, one truth.</p>
+        </div>
+        <div class="how-card reveal">
+          <span class="how-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 3l1.7 4.3L17 9l-4.3 1.7L11 15l-1.7-4.3L5 9l4.3-1.7z"/>
+              <path d="M18 14l.8 2L21 16.8l-2.2.7L18 19.5l-.8-1.7L15 16.8l2.2-.8z"/>
+            </svg>
+          </span>
+          <div class="how-num">03 / Build</div>
+          <h3 class="how-title">Describe the outcome.</h3>
+          <p class="how-desc">Tell Netter what you want. Review, tweak, deploy.</p>
+        </div>
+        <div class="how-card reveal">
+          <span class="how-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </span>
+          <div class="how-num">04 / Operate</div>
+          <h3 class="how-title">Ship and iterate.</h3>
+          <p class="how-desc">Versioned, observable, secure. Owned by your team, day one.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       LEAD CAPTURE - static section (just before the final CTA)
+       ============================================================ -->
+  <section id="leads" class="section lead-section">
+    <div class="container">
+      <div class="lead-grid">
+        <div class="lead-copy reveal">
+          <span class="sect-eyebrow">Free report</span>
+          <h2 class="sect-heading">
+            The AI use cases<br />
+            <em>reshaping your industry</em>.
+          </h2>
+          <p class="sect-sub">
+            Get our report on the highest-impact AI use cases in your industry. Concrete data, real-world results, measured ROI.
+          </p>
+
+          <div class="lead-visual" aria-label="What's inside the report">
+            <div class="lead-visual-back" aria-hidden="true"></div>
+            <div class="lead-visual-card">
+              <div class="lead-visual-head">
+                <span class="lead-visual-eyebrow">— Inside the report</span>
+                <span class="lead-visual-tag">5 pages</span>
+              </div>
+
+              <div class="lead-visual-stat">
+                <div class="lead-visual-stat-row">
+                  <span class="lead-visual-stat-label">ROI by use case</span>
+                  <span class="lead-visual-stat-trend">
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M3 8l3-3 2 2 3-4"/>
+                    </svg>
+                    avg. +38%
+                  </span>
+                </div>
+                <div class="lead-visual-bars" aria-hidden="true">
+                  <span style="height: 22%"></span>
+                  <span style="height: 32%"></span>
+                  <span style="height: 46%"></span>
+                  <span style="height: 58%"></span>
+                  <span style="height: 72%"></span>
+                  <span style="height: 88%"></span>
+                  <span style="height: 100%"></span>
+                </div>
+              </div>
+
+              <div class="lead-visual-divider"></div>
+
+              <ul class="lead-visual-list">
+                <li>Top use cases by industry</li>
+                <li>Observed ROI &amp; deployment timelines</li>
+                <li>Mistakes to avoid</li>
+                <li>Where to start</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="lead-form-host reveal" data-lead-host="static"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FINAL CTA
+       ============================================================ -->
+  <section id="contact" class="section" style="border-top: 1px solid var(--dmi-border);">
+    <div class="container">
+      <div class="cta reveal">
+        <div class="cta-content">
+          <span class="cta-eyebrow">Get started</span>
+          <h2 class="cta-heading">
+            Transform your company<br />
+            <em>in 2 weeks</em>.
+          </h2>
+          <p class="cta-sub">
+            Tell us about your use case, we'll show you live.
+          </p>
+          <div class="cta-buttons">
+            <a href="https://calendly.com/samuel-netterai/30min?month=2026-03"
+               target="_blank" rel="noopener"
+               class="cta-btn-primary">
+              Book a demo
+            </a>
+            <a href="mailto:samuel@netterai.org" class="cta-btn-secondary">
+              samuel@netterai.org
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       LEAD MODAL - timed overlay (auto-opens after 10s, once/session)
+       ============================================================ -->
+  <div class="lead-modal" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="leadModalTitle" hidden>
+    <div class="lead-modal-card" role="document">
+      <div class="lead-modal-head">
+        <div class="lead-modal-head-text">
+          <h2 id="leadModalTitle" class="lead-modal-title">
+            The <em>AI</em> report for your industry.
+          </h2>
+          <p class="lead-modal-sub">
+            Concrete use cases, measured ROI, and where to start, straight to your inbox.
+          </p>
+        </div>
+        <button type="button" class="lead-modal-close" data-lead-close aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="lead-form-host" data-lead-host="modal"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       LEAD FORM TEMPLATE - cloned into both static section & modal
+       ============================================================ -->
+  <template id="leadFormTemplate">
+    <form class="lead-form" data-lead-form novalidate>
+      <div class="lead-form-fields" data-lead-fields>
+      <div class="lead-row">
+        <div class="lead-field">
+          <label>
+            <span class="lead-field-label">First name</span>
+            <input type="text" name="first_name" autocomplete="given-name" placeholder="Jane" required />
+          </label>
+        </div>
+        <div class="lead-field">
+          <label>
+            <span class="lead-field-label">Last name</span>
+            <input type="text" name="last_name" autocomplete="family-name" placeholder="Smith" required />
+          </label>
+        </div>
+      </div>
+
+      <div class="lead-field">
+        <label>
+          <span class="lead-field-label">Work email</span>
+          <input type="email" name="email" autocomplete="email" placeholder="jane@company.com" required />
+        </label>
+      </div>
+
+      <div class="lead-field">
+        <span class="lead-field-label">Industry</span>
+        <div class="lead-pills" role="radiogroup" aria-label="Industry">
+          <button type="button" class="lead-pill" data-industry="healthcare" role="radio" aria-checked="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            <span>Healthcare</span>
+          </button>
+          <button type="button" class="lead-pill" data-industry="retail" role="radio" aria-checked="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 8h14l-1.2 11.2a1.6 1.6 0 0 1-1.6 1.4H7.8a1.6 1.6 0 0 1-1.6-1.4L5 8z"/>
+              <path d="M9 8a3 3 0 0 1 6 0"/>
+            </svg>
+            <span>Retail</span>
+          </button>
+          <button type="button" class="lead-pill" data-industry="manufacturing" role="radio" aria-checked="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="2.6"/>
+              <path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M5.2 18.8l2.1-2.1M16.7 7.3l2.1-2.1"/>
+            </svg>
+            <span>Manufacturing</span>
+          </button>
+          <button type="button" class="lead-pill" data-industry="logistics" role="radio" aria-checked="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 6h11v10H3z"/>
+              <path d="M14 9h4l3 3v4h-7"/>
+              <circle cx="7.5" cy="17.5" r="1.7"/>
+              <circle cx="17" cy="17.5" r="1.7"/>
+            </svg>
+            <span>Logistics</span>
+          </button>
+          <button type="button" class="lead-pill" data-industry="real_estate" role="radio" aria-checked="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 21V5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v16"/>
+              <path d="M14 10h4a1 1 0 0 1 1 1v10"/>
+              <path d="M3 21h18"/>
+              <path d="M8 8h2M8 12h2M8 16h2"/>
+            </svg>
+            <span>Real Estate</span>
+          </button>
+          <button type="button" class="lead-pill" data-industry="other" role="radio" aria-checked="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="6" cy="12" r="1.2"/>
+              <circle cx="12" cy="12" r="1.2"/>
+              <circle cx="18" cy="12" r="1.2"/>
+            </svg>
+            <span>Other</span>
+          </button>
+        </div>
+        <input
+          type="text"
+          name="industry_other"
+          class="lead-input-other"
+          data-industry-other
+          placeholder="Tell us your industry"
+          hidden
+        />
+      </div>
+
+      <div class="lead-field">
+        <label>
+          <span class="lead-field-label">Your biggest data challenge (optional)</span>
+          <textarea
+            name="pain"
+            rows="3"
+            placeholder="e.g. we don't know where to start…"
+          ></textarea>
+        </label>
+      </div>
+
+      <button type="submit" class="lead-submit" data-lead-submit>
+        <span data-lead-submit-label>Send me the report</span>
+      </button>
+
+      <p class="lead-msg" data-lead-msg role="status" aria-live="polite"></p>
+
+      <p class="lead-foot">No spam. We'll never share your email.</p>
+      </div>
+
+      <div class="lead-success" data-lead-success role="status" aria-live="polite" hidden>
+        <span class="lead-success-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="6" width="18" height="13" rx="2"/>
+            <path d="M3 8l9 6 9-6"/>
+          </svg>
+        </span>
+        <h3 class="lead-success-title">
+          Thanks, <span data-lead-success-name>there</span>.
+        </h3>
+        <p class="lead-success-msg">
+          Samuel (CEO) is preparing your report :) Expect it in your inbox shortly!
+        </p>
+        <p class="lead-success-foot">
+          We'll send it to <strong data-lead-success-email></strong>
+        </p>
+      </div>
+    </form>
+  </template>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer>
+    <div class="container">
+      <div class="foot">
+        <div class="foot-meta">© 2026 Netter, Inc. All systems operational.</div>
+        <div class="foot-links">
+          <a href="https://calendly.com/samuel-netterai/30min?month=2026-03" target="_blank" rel="noopener" class="foot-link">Book a demo</a>
+          <a href="mailto:samuel@netterai.org" class="foot-link">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JS - composer rotating placeholder, scroll reveal, nav scrolled
+       ============================================================ -->
+  <!-- Supabase JS client (UMD) - exposes window.supabase.createClient -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    /* ---------- Calendly URL - single source ---------- */
+    const CALENDLY = 'https://calendly.com/samuel-netterai/30min?month=2026-03';
+
+    /* ---------- Supabase client ----------
+       The publishable key is safe to embed in front-end code:
+       security is enforced by Row Level Security (RLS) policies on
+       the `leads` table, not by keeping the key secret. */
+    const SUPABASE_URL = 'https://auofuopmehawbwsfloev.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_V3iMT9l0hPZZG_X1dgyd9w_vaROCyov';
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    /* ---------- Composer rotating placeholder + submit ---------- */
+    (function setupComposer() {
+      const examples = [
+        'Build a weekly revenue health report from Stripe and HubSpot.',
+        'Classify support tickets and publish an SLA dashboard for ops.',
+        'Monitor warehouse freshness and alert me on Slack on anomalies.',
+        'Enrich every new lead with company intel and route by persona fit.',
+        'Score invoices on payment risk and trigger collection automatically.',
+        'Track competitor pricing daily and surface what changed.',
+      ];
+      const input = document.getElementById('composerInput');
+      const form  = document.getElementById('composerForm');
+      if (!input || !form) return;
+
+      let exampleIdx = 0;
+      let phase = 'pausing';
+      let currentText = examples[0];
+      let twTimer = null;
+
+      function deleteLastWord(s) {
+        s = s.replace(/\s+$/, '');
+        if (!s) return '';
+        const m = s.match(/^(.*?)\s*(\S+)$/);
+        return m ? m[1] : '';
+      }
+
+      function step() {
+        if (input.value.length > 0) { twTimer = setTimeout(step, 700); return; }
+        const target = examples[exampleIdx];
+        let nextDelay;
+        if (phase === 'typing') {
+          if (currentText.length < target.length) {
+            currentText = target.slice(0, currentText.length + 1);
+            input.setAttribute('placeholder', currentText);
+            const ch = target[currentText.length - 1];
+            nextDelay = ch === ' ' ? 30 : 22 + Math.random() * 28;
+          } else { phase = 'pausing'; nextDelay = 1700; }
+        } else if (phase === 'pausing') {
+          phase = 'deleting'; nextDelay = 90;
+        } else {
+          if (currentText.length > 0) {
+            currentText = deleteLastWord(currentText);
+            input.setAttribute('placeholder', currentText);
+            nextDelay = 110 + Math.random() * 30;
+          } else {
+            phase = 'typing';
+            exampleIdx = (exampleIdx + 1) % examples.length;
+            nextDelay = 280;
+          }
+        }
+        twTimer = setTimeout(step, nextDelay);
+      }
+      function startTW() { if (!twTimer) step(); }
+      function stopTW()  { if (twTimer) { clearTimeout(twTimer); twTimer = null; } }
+
+      input.addEventListener('focus', stopTW);
+      input.addEventListener('blur',  () => { if (!input.value) startTW(); });
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduced) startTW();
+
+      function go() {
+        const v = (input.value || '').trim();
+        const url = v
+          ? CALENDLY + (CALENDLY.includes('?') ? '&' : '?') + 'a1=' + encodeURIComponent(v.slice(0, 240))
+          : CALENDLY;
+        window.open(url, '_blank', 'noopener');
+      }
+      form.addEventListener('submit', (e) => { e.preventDefault(); go(); });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); go(); }
+      });
+    })();
+
+
+    /* ---------- Nav scrolled state ---------- */
+    const nav = document.getElementById('nav');
+    function onScroll() {
+      if (window.scrollY > 8) nav.classList.add('scrolled');
+      else                    nav.classList.remove('scrolled');
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* ---------- Dashboard parallax (mouse-tilt) ---------- */
+    const previewFrame = document.querySelector('.preview-frame');
+    const previewStage = document.querySelector('.preview-stage');
+    if (previewFrame && previewStage && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let raf = 0;
+      let targetRX = 8, targetRY = -1.5;
+      let curRX    = 8, curRY    = -1.5;
+
+      function animate() {
+        // Smooth easing toward target (lerp)
+        curRX += (targetRX - curRX) * 0.10;
+        curRY += (targetRY - curRY) * 0.10;
+        previewFrame.style.setProperty('--rx', curRX.toFixed(2) + 'deg');
+        previewFrame.style.setProperty('--ry', curRY.toFixed(2) + 'deg');
+        if (Math.abs(targetRX - curRX) > 0.02 || Math.abs(targetRY - curRY) > 0.02) {
+          raf = requestAnimationFrame(animate);
+        } else { raf = 0; }
+      }
+      function schedule() { if (!raf) raf = requestAnimationFrame(animate); }
+
+      previewStage.addEventListener('mouseenter', () => {
+        previewFrame.classList.add('is-parallaxing');
+      });
+      previewStage.addEventListener('mousemove', (e) => {
+        const rect = previewFrame.getBoundingClientRect();
+        const cx = rect.left + rect.width  / 2;
+        const cy = rect.top  + rect.height / 2;
+        // Normalized -1..1
+        const nx = (e.clientX - cx) / (rect.width  / 2);
+        const ny = (e.clientY - cy) / (rect.height / 2);
+        // Tilt range: a few degrees around the resting tilt
+        targetRX = 6 + (-ny) * 4;   // 2°..10° on Y
+        targetRY = -1.5 + (nx) * 5; // -6.5°..3.5° on X
+        schedule();
+      });
+      previewStage.addEventListener('mouseleave', () => {
+        targetRX = 8; targetRY = -1.5;
+        schedule();
+      });
+    }
+
+    /* ---------- Scroll reveal ---------- */
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+    /* ---------- Lead capture form (shared by static section + modal) ---------- */
+    const LEAD_MODAL_FLAG = 'lead_modal_seen';
+
+    function setupLeadForm(form, opts) {
+      opts = opts || {};
+      const pills = Array.from(form.querySelectorAll('[data-industry]'));
+      const otherInput = form.querySelector('[data-industry-other]');
+      const submitBtn = form.querySelector('[data-lead-submit]');
+      const submitLabel = form.querySelector('[data-lead-submit-label]');
+      const msg = form.querySelector('[data-lead-msg]');
+      const fieldsEl = form.querySelector('[data-lead-fields]');
+      const successEl = form.querySelector('[data-lead-success]');
+      const successName = form.querySelector('[data-lead-success-name]');
+      const successEmail = form.querySelector('[data-lead-success-email]');
+
+      let selectedIndustry = null;
+
+      function setIndustry(value) {
+        selectedIndustry = value;
+        pills.forEach((p) => {
+          p.setAttribute('aria-checked', p.dataset.industry === value ? 'true' : 'false');
+        });
+        const isOther = value === 'other';
+        otherInput.hidden = !isOther;
+        if (!isOther) otherInput.value = '';
+      }
+
+      pills.forEach((pill) => {
+        pill.addEventListener('click', () => setIndustry(pill.dataset.industry));
+      });
+
+      function clearMsg() {
+        msg.className = 'lead-msg';
+        msg.textContent = '';
+      }
+      function showMsg(kind, text) {
+        msg.className = 'lead-msg is-' + kind;
+        msg.textContent = text;
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearMsg();
+
+        const data = new FormData(form);
+        const firstName = (data.get('first_name') || '').toString().trim();
+        const lastName  = (data.get('last_name')  || '').toString().trim();
+        const email     = (data.get('email')      || '').toString().trim();
+        const pain      = (data.get('pain')       || '').toString().trim();
+        const industryOther = (data.get('industry_other') || '').toString().trim();
+
+        let industry = selectedIndustry;
+        if (industry === 'other') industry = industryOther || 'other';
+
+        if (!firstName || !lastName || !email || !selectedIndustry) {
+          showMsg('error', 'Please fill in all required fields.');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitLabel.textContent = 'Sending…';
+
+        const payload = {
+          first_name: firstName,
+          last_name:  lastName,
+          email,
+          industry,
+          pain,
+        };
+        console.log('[lead] submit', payload);
+
+        try {
+          const { error } = await supabaseClient
+            .from('leads')
+            .insert([payload]);
+          if (error) throw error;
+
+          sessionStorage.setItem(LEAD_MODAL_FLAG, 'true');
+          form.dataset.state = 'success';
+          successName.textContent = firstName;
+          successEmail.textContent = email;
+          fieldsEl.hidden = true;
+          successEl.hidden = false;
+          if (typeof opts.onSuccess === 'function') opts.onSuccess();
+        } catch (err) {
+          console.error('[lead] submit failed', err);
+          showMsg('error', 'Something went wrong. Please try again.');
+          submitBtn.disabled = false;
+          submitLabel.textContent = 'Send me the report';
+        }
+      });
+    }
+
+    function injectLeadForm(host, opts) {
+      const tpl = document.getElementById('leadFormTemplate');
+      if (!tpl || !host) return null;
+      const form = tpl.content.firstElementChild.cloneNode(true);
+      host.appendChild(form);
+      setupLeadForm(form, opts);
+      return form;
+    }
+
+    /* ---------- Lead modal (auto-trigger after 10s, once per session) ---------- */
+    (function setupLeadModal() {
+      const modal = document.getElementById('leadModal');
+      if (!modal) return;
+
+      const closeBtn = modal.querySelector('[data-lead-close]');
+      const staticHost = document.querySelector('[data-lead-host="static"]');
+      const modalHost  = modal.querySelector('[data-lead-host="modal"]');
+
+      let isOpen = false;
+
+      function open() {
+        if (isOpen) return;
+        if (sessionStorage.getItem(LEAD_MODAL_FLAG)) return;
+        isOpen = true;
+        modal.hidden = false;
+        modal.classList.add('is-open');
+        // Allow the display:flex to commit before triggering the transition
+        requestAnimationFrame(() => modal.classList.add('is-visible'));
+        document.body.style.overflow = 'hidden';
+      }
+      function close() {
+        if (!isOpen) return;
+        isOpen = false;
+        sessionStorage.setItem(LEAD_MODAL_FLAG, 'true');
+        modal.classList.remove('is-visible');
+        document.body.style.overflow = '';
+        const onEnd = () => {
+          modal.classList.remove('is-open');
+          modal.hidden = true;
+          modal.removeEventListener('transitionend', onEnd);
+        };
+        modal.addEventListener('transitionend', onEnd);
+        // Fallback in case transitionend doesn't fire (reduced motion, etc.)
+        setTimeout(onEnd, 260);
+      }
+
+      injectLeadForm(staticHost, {});
+      injectLeadForm(modalHost, {
+        onSuccess: () => setTimeout(close, 4000),
+      });
+
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) close();
+      });
+      closeBtn.addEventListener('click', close);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isOpen) close();
+      });
+
+      // Auto-trigger the timed modal — but cancel it the moment the
+      // visitor starts engaging with the static form. No point nagging
+      // someone who's already filling their email in the section below.
+      let openTimer = null;
+      if (!sessionStorage.getItem(LEAD_MODAL_FLAG)) {
+        openTimer = setTimeout(open, 10000);
+
+        const cancelTimedOpen = () => {
+          if (openTimer) {
+            clearTimeout(openTimer);
+            openTimer = null;
+          }
+          staticHost.removeEventListener('focusin', cancelTimedOpen);
+          staticHost.removeEventListener('input', cancelTimedOpen);
+        };
+
+        if (staticHost) {
+          staticHost.addEventListener('focusin', cancelTimedOpen);
+          staticHost.addEventListener('input', cancelTimedOpen);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
